@@ -7,6 +7,7 @@ from mediapipe.framework.formats import landmark_pb2
 import numpy as np
 import cv2
 import matplotlib.pyplot as plt
+
 hand_position = 0,0
 # Path to pose model
 MODEL_PATH = os.path.expanduser('C:/Users/User/Source/Repos/viar.github.io/Pose/pose_landmarker_full.task')
@@ -41,12 +42,12 @@ def draw_landmarks_on_image(rgb_image, detection_result):
             landmark_pb2.NormalizedLandmark(x=landmark.x, y=landmark.y, z=landmark.z)
             for landmark in pose_landmarks
         ])
-        solutions.drawing_utils.draw_landmarks(
-            annotated_image,
-            pose_landmarks_proto,
-            solutions.pose.POSE_CONNECTIONS,
-            solutions.drawing_styles.get_default_pose_landmarks_style()
-        )
+       # solutions.drawing_utils.draw_landmarks(
+        #    annotated_image,
+         #   pose_landmarks_proto,
+          #  solutions.pose.POSE_CONNECTIONS,
+           # solutions.drawing_styles.get_default_pose_landmarks_style()
+        #)
 
         # Add landmark indices as numbers
         for i, landmark in enumerate(pose_landmarks):
@@ -54,15 +55,7 @@ def draw_landmarks_on_image(rgb_image, detection_result):
             y = int(landmark.y * rgb_image.shape[0])
             if(i == 20):
                 set_hand_position(x,y)
-                cv2.putText(
-                    annotated_image, str(x) + "," + str(y), (x, y), 
-                    fontFace=cv2.FONT_HERSHEY_SIMPLEX, 
-                    fontScale=0.4, 
-                    color=(255, 0, 0), 
-                    thickness=1, 
-                    lineType=cv2.LINE_AA
-
-            )
+                
             
     return annotated_image
 

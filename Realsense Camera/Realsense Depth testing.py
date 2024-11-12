@@ -11,7 +11,6 @@ import cv2
 import sys
 sys.path.append('C:/Users/User/Source/Repos/viar.github.io')
 print(sys.path)
-
 from Pose.pose import *  # Now this works
 
 
@@ -123,15 +122,34 @@ try:
                 objectdepth = depth_image[objectmidpoint].astype(float)
                 objectdepth = "{:.2f}".format(objectdepth * depth_scale)
      
-                cv2.putText(crop_img,str(objectmidpoint) + str(objectdepth),objectmidpoint,cv2.FONT_HERSHEY_COMPLEX,0.5,(255,255,255))
+                cv2.putText(crop_img,str(objectmidpoint) + str(objectdepth) + "meters",objectmidpoint,cv2.FONT_HERSHEY_COMPLEX,0.5,(255,255,255))
         
 
         type(crop_img)
         #pose detection
         detection_result = detect_pose_landmarks_from_array(crop_img, detector)
         annotated_image = draw_landmarks_on_image(crop_img, detection_result)
+        #hand position data
+        hand_position = get_hand_position()
+        x = hand_position[0]
+        y = hand_position[1]
+        if(hand_position[0]<320 and hand_position[1] < 240):
 
-        
+            objectdepth = depth_image[hand_position].astype(float)
+            objectdepth = "{:.2f}".format(objectdepth * depth_scale)
+
+
+            print(str(get_hand_position()) + "," + objectdepth)
+            cv2.putText(
+                        annotated_image, str(x) + "," + str(y) + "," +objectdepth + "meters", (x, y), 
+                        fontFace=cv2.FONT_HERSHEY_SIMPLEX, 
+                        fontScale=0.4, 
+                        color=(255, 0, 0), 
+                        thickness=1, 
+                        lineType=cv2.LINE_AA
+
+                )
+
         if depth_colormap_dim != color_colormap_dim or 1:
              
             resized_color_image = cv2.resize(annotated_image, dsize=(depth_colormap_dim[1], depth_colormap_dim[0]), interpolation=cv2.INTER_AREA)
@@ -139,10 +157,7 @@ try:
         else:
             images = np.hstack((annotated_image, depth_colormap))
             
-        hand_position = get_hand_position()
-        objectdepth = depth_image[hand_position].astype(float)
-        objectdepth = "{:.2f}".format(objectdepth * depth_scale)
-        print(str(get_hand_position()) + "," + objectdepth)
+       
 
 
 
