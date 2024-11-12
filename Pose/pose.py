@@ -7,9 +7,9 @@ from mediapipe.framework.formats import landmark_pb2
 import numpy as np
 import cv2
 import matplotlib.pyplot as plt
-
+hand_position = 0,0
 # Path to pose model
-MODEL_PATH = os.path.expanduser('~/OneDrive/Desktop/UCLA Q1/ECE M202A/Project/pose_landmarker.task')
+MODEL_PATH = os.path.expanduser('C:/Users/User/Source/Repos/viar.github.io/Pose/pose_landmarker_full.task')
 
 def initialize_pose_landmarker():
     base_options = python.BaseOptions(model_asset_path=MODEL_PATH)
@@ -26,6 +26,8 @@ def detect_pose_landmarks(image_path, detector):
 # RGB image array
 def detect_pose_landmarks_from_array(rgb_image, detector):
     # Convert RGB image array to MediaPipe Image format
+    rgb_image = np.array(rgb_image)
+
     mp_image = mp.Image(image_format=mp.ImageFormat.SRGB, data=rgb_image)
     return detector.detect(mp_image)
 
@@ -50,16 +52,29 @@ def draw_landmarks_on_image(rgb_image, detection_result):
         for i, landmark in enumerate(pose_landmarks):
             x = int(landmark.x * rgb_image.shape[1])
             y = int(landmark.y * rgb_image.shape[0])
-            cv2.putText(
-                annotated_image, str(i), (x, y), 
-                fontFace=cv2.FONT_HERSHEY_SIMPLEX, 
-                fontScale=0.4, 
-                color=(255, 0, 0), 
-                thickness=1, 
-                lineType=cv2.LINE_AA
+            if(i == 20):
+                set_hand_position(x,y)
+                cv2.putText(
+                    annotated_image, str(x) + "," + str(y), (x, y), 
+                    fontFace=cv2.FONT_HERSHEY_SIMPLEX, 
+                    fontScale=0.4, 
+                    color=(255, 0, 0), 
+                    thickness=1, 
+                    lineType=cv2.LINE_AA
+
             )
             
     return annotated_image
+
+
+def get_hand_position():
+   
+
+    return hand_position
+
+def set_hand_position(x,y):
+    global hand_position
+    hand_position = x,y
 
 if __name__ == "__main__":
 
