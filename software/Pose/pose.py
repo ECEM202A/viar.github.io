@@ -1,103 +1,126 @@
-import os
-import mediapipe as mp
-from mediapipe.tasks import python
-from mediapipe.tasks.python import vision
-from mediapipe import solutions
-from mediapipe.framework.formats import landmark_pb2
-import numpy as np
 import cv2
-import matplotlib.pyplot as plt
+import mediapipe as mp
+import numpy as np
+import math
 
-# Path to pose model
-MODEL_PATH = os.path.expanduser('~/OneDrive/Desktop/UCLA Q1/ECE M202A/Project/pose_landmarker.task')
+mp_face_mesh = mp.solutions.face_mesh
+mp_pose = mp.solutions.pose
+mp_drawing = mp.solutions.drawing_utils
 
-def initialize_pose_landmarker():
-    base_options = python.BaseOptions(model_asset_path=MODEL_PATH)
-    options = vision.PoseLandmarkerOptions(
-        base_options=base_options,
-        output_segmentation_masks=True
-    )
-    return vision.PoseLandmarker.create_from_options(options)
+cap = cv2.VideoCapture(0)
 
-def detect_pose_landmarks(image_path, detector):
-    image = mp.Image.create_from_file(image_path)
-    return detector.detect(image), image
+# Initialize face mesh and pose models
+face_mesh = mp_face_mesh.FaceMesh(min_detection_confidence=0.5, min_tracking_confidence=0.5)
+pose = mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5)
 
-# RGB image array
-def detect_pose_landmarks_from_array(rgb_image, detector):
-    # Convert RGB image array to MediaPipe Image format
-    mp_image = mp.Image(image_format=mp.ImageFormat.SRGB, data=rgb_image)
-    return detector.detect(mp_image)
+# Camera parameters
+focal_length = 1.0 * cap.get(3)  # width of the frame
+camera_matrix = np.array([
+    [focal_length, 0, cap.get(3) / 2],
+    [0, focal_length, cap.get(4) / 2],
+    [0, 0, 1]
+], dtype="double")
+dist_coeffs = np.zeros((4, 1), dtype=np.float64)
 
-def draw_landmarks_on_image(rgb_image, detection_result):
-    pose_landmarks_list = detection_result.pose_landmarks
-    annotated_image = np.copy(rgb_image)
+# Function to convert rotation matrix to Euler angles
+def rotation_matrix_to_angles(rotation_matrix):
+    x = math.atan2(rotation_matrix[2, 1], rotation_matrix[2, 2])
+    y = math.atan2(-rotation_matrix[2, 0], math.sqrt(rotation_matrix[0, 0] ** 2 + rotation_matrix[1, 0] ** 2))
+    z = math.atan2(rotation_matrix[1, 0], rotation_matrix[0, 0])
+    return np.array([x, y, z]) * 180. / math.pi
 
-    for idx, pose_landmarks in enumerate(pose_landmarks_list):
-        pose_landmarks_proto = landmark_pb2.NormalizedLandmarkList()
-        pose_landmarks_proto.landmark.extend([
-            landmark_pb2.NormalizedLandmark(x=landmark.x, y=landmark.y, z=landmark.z)
-            for landmark in pose_landmarks
-        ])
-        solutions.drawing_utils.draw_landmarks(
-            annotated_image,
-            pose_landmarks_proto,
-            solutions.pose.POSE_CONNECTIONS,
-            solutions.drawing_styles.get_default_pose_landmarks_style()
-        )
+while True:
+    success, frame = cap.read()
+    if not success:
+        continue
 
-        # Add landmark indices as numbers
-        for i, landmark in enumerate(pose_landmarks):
-            x = int(landmark.x * rgb_image.shape[1])
-            y = int(landmark.y * rgb_image.shape[0])
-            cv2.putText(
-                annotated_image, str(i), (x, y), 
-                fontFace=cv2.FONT_HERSHEY_SIMPLEX, 
-                fontScale=0.4, 
-                color=(255, 0, 0), 
-                thickness=1, 
-                lineType=cv2.LINE_AA
+    # RGB for MediaPipe
+    frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+    
+    # Process face mesh and pose landmarks
+    face_results = face_mesh.process(frame_rgb)
+    pose_results = pose.process(frame_rgb)
+
+    # BGR for OpenCV
+    frame_rgb = cv2.cvtColor(frame_rgb, cv2.COLOR_RGB2BGR)
+
+    # Camera matrix
+    focal_length = 1 * cap.get(3)
+    cam_matrix = np.array([[focal_length, 0, cap.get(3) / 2],
+                            [0, focal_length, cap.get(4) / 2],
+                            [0, 0, 1]])
+
+    # Distortion matrix
+    dist_matrix = np.zeros((4, 1), dtype=np.float64)
+
+    face_coordination_in_real_world = np.array([
+        [285, 528, 200],
+        [285, 371, 152],
+        [197, 574, 128],
+        [173, 425, 108],
+        [360, 574, 128],
+        [391, 425, 108]
+    ], dtype=np.float64)
+
+    h, w, _ = frame.shape
+    face_coordination_in_image = []
+
+    if face_results.multi_face_landmarks:
+        for face_landmarks in face_results.multi_face_landmarks:
+            for idx, lm in enumerate(face_landmarks.landmark):
+                if idx in [1, 9, 57, 130, 287, 359]:
+                    x, y = int(lm.x * w), int(lm.y * h)
+                    face_coordination_in_image.append([x, y])
+
+            face_coordination_in_image = np.array(face_coordination_in_image,
+                                                  dtype=np.float64)
+
+            # Use solvePnP function to get rotation vector
+            success, rotation_vec, translation_vec = cv2.solvePnP(
+                face_coordination_in_real_world, face_coordination_in_image,
+                cam_matrix, dist_matrix)
+
+            # Use Rodrigues function to convert rotation vector to matrix
+            rotation_matrix, jacobian = cv2.Rodrigues(rotation_vec)
+
+            result = rotation_matrix_to_angles(rotation_matrix)
+            for i, info in enumerate(zip(('Pitch', 'Yaw', 'Roll'), result)):
+                k, v = info
+                text = f'{k}: {int(v)}'
+                cv2.putText(frame, text, (20, i*30 + 20),
+                            cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+
+            # Forward direction vector
+            forward_vector = rotation_matrix @ np.array([0, 0, 1])
+
+            nose_direction_point_3d = np.array([
+                face_coordination_in_real_world[0][0] + forward_vector[0] * 1000,
+                face_coordination_in_real_world[0][1] + forward_vector[1] * 1000,
+                face_coordination_in_real_world[0][2] + forward_vector[2] * 1000
+            ])
+
+            # Project the nose and direction point onto the 2D image plane
+            nose_tip_2d, _ = cv2.projectPoints(
+                np.array([face_coordination_in_real_world[0]]), rotation_vec, translation_vec, cam_matrix, dist_matrix
             )
-            
-    return annotated_image
+            nose_direction_point_2d, _ = cv2.projectPoints(
+                np.array([nose_direction_point_3d]), rotation_vec, translation_vec, cam_matrix, dist_matrix
+            )
 
-if __name__ == "__main__":
+            # Draw the forward direction line starting at nose
+            p1 = (int(nose_tip_2d[0][0][0]), int(nose_tip_2d[0][0][1]))
+            p2 = (int(nose_direction_point_2d[0][0][0]), int(nose_direction_point_2d[0][0][1]))
+            cv2.line(frame, p1, p2, (255, 0, 0), 2)
 
-    # Init PoseLandmarker
-    detector = initialize_pose_landmarker()
 
-    cap = cv2.VideoCapture(0)
-    if not cap.isOpened():
-        print("Error: Could not open webcam.")
-    else:
-        while cv2.waitKey(1) != ord('q'):
-            ret, frame = cap.read()
-            if not ret:
-                print("Error: Could not capture frame.")
-                break
+    # Draw pose landmarks for visualization
+    if pose_results.pose_landmarks:
+        mp_drawing.draw_landmarks(frame, pose_results.pose_landmarks, mp_pose.POSE_CONNECTIONS)
 
-            img_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+    cv2.imshow(" ", frame)
 
-            # Detect and draw landmarks from the frame
-            detection_result = detect_pose_landmarks_from_array(img_rgb, detector)
-            annotated_image = draw_landmarks_on_image(img_rgb, detection_result)
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
 
-            # Check if landmarks are detected
-            if detection_result.pose_landmarks:
-                # Get index value for the nose
-                nose_index = mp.solutions.pose.PoseLandmark.NOSE.value
-
-                # Access the nose landmark
-                nose = detection_result.pose_landmarks[0][nose_index]
-
-                # Print the z-value for the nose
-                print(f"Nose Z: {nose.z:.2f}")
-            else:
-                print("Nose landmark not detected.")
-
-            annotated_image_bgr = cv2.cvtColor(annotated_image, cv2.COLOR_RGB2BGR)
-
-            cv2.imshow("Pose Detection", annotated_image_bgr)
-
-        cap.release()
-        cv2.destroyAllWindows()
+cap.release()
+cv2.destroyAllWindows()
