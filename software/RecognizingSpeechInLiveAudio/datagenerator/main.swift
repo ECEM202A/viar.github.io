@@ -11,23 +11,25 @@ let data = SFCustomLanguageModelData(locale: Locale(identifier: "en_US"), identi
     
     SFCustomLanguageModelData.PhraseCount(phrase: "Play the Albin counter gambit", count: 10)
     
-    // Move Commands
+    // Find Commands
     SFCustomLanguageModelData.PhraseCountsFromTemplates(classes: [
-        "piece": ["pawn", "rook", "knight", "bishop", "queen", "king"],
-        "royal": ["queen", "king"],
-        "rank": Array(1...8).map({ String($0) })
+//        "piece": ["pawn", "rook", "knight", "bishop", "queen", "king"],
+//        "royal": ["queen", "king"],
+        "object": ["phone", "laptop", "remote", "keys", "cup", "cane", "glasses"]
+//        "rank": Array(1...8).map({ String($0) })
     ]) {
         SFCustomLanguageModelData.TemplatePhraseCountGenerator.Template(
-            "<piece> to <royal> <piece> <rank>",
+            "Find my <object>",
             count: 10_000
         )
     }
 
-    SFCustomLanguageModelData.CustomPronunciation(grapheme: "Winawer", phonemes: ["w I n aU @r"])
-    SFCustomLanguageModelData.CustomPronunciation(grapheme: "Tartakower", phonemes: ["t A r t @ k aU @r"])
+//    SFCustomLanguageModelData.CustomPronunciation(grapheme: "Winawer", phonemes: ["w I n aU @r"])
+//    SFCustomLanguageModelData.CustomPronunciation(grapheme: "Tartakower", phonemes: ["t A r t @ k aU @r"])
 
-    SFCustomLanguageModelData.PhraseCount(phrase: "Play the Winawer variation", count: 10)
-    SFCustomLanguageModelData.PhraseCount(phrase: "Play the Tartakower", count: 10)
+//    SFCustomLanguageModelData.PhraseCount(phrase: "Play the Winawer variation", count: 10)
+//    SFCustomLanguageModelData.PhraseCount(phrase: "Play the Tartakower", count: 10)
 }
 
 try await data.export(to: URL(filePath: "/var/tmp/CustomLMData.bin"))
+
