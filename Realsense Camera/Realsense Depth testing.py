@@ -56,6 +56,9 @@ try:
         frames = align.process(frames)
         depth_frame = frames.get_depth_frame()
         color_frame = frames.get_color_frame()
+        profile = depth_frame.profile
+        intrinsics = profile.as_video_stream_profile().get_intrinsics()
+
         if not depth_frame or not color_frame:
             continue
 
@@ -123,7 +126,9 @@ try:
                 objectdepth = "{:.2f}".format(objectdepth * depth_scale)
      
                 cv2.putText(crop_img,str(objectmidpoint) + str(objectdepth) + "meters",objectmidpoint,cv2.FONT_HERSHEY_COMPLEX,0.5,(255,255,255))
-        
+                
+                object3Dpoint = {objectmidpoint[0],objectmidpoint[1], objectdepth}
+
 
         type(crop_img)
         #pose detection
@@ -135,13 +140,13 @@ try:
         y = hand_position[1]
         if(hand_position[0]<320 and hand_position[1] < 240):
 
-            objectdepth = depth_image[hand_position].astype(float)
-            objectdepth = "{:.2f}".format(objectdepth * depth_scale)
+            handdepth = depth_image[hand_position].astype(float)
+            handdepth = "{:.2f}".format(handdepth * depth_scale)
 
 
-            print(str(get_hand_position()) + "," + objectdepth)
+            print(str(get_hand_position()) + "," + handdepth)
             cv2.putText(
-                        annotated_image, str(x) + "," + str(y) + "," +objectdepth + "meters", (x, y), 
+                        annotated_image, str(x) + "," + str(y) + "," +handdepth + "meters", (x, y), 
                         fontFace=cv2.FONT_HERSHEY_SIMPLEX, 
                         fontScale=0.4, 
                         color=(255, 0, 0), 
@@ -149,6 +154,13 @@ try:
                         lineType=cv2.LINE_AA
 
                 )
+            hand3Dpoint = {x,y,handdepth}
+            print(className + "  Object 3D point = " + object3Dpoint)
+            print("Hand 3D point = " + hand3Dpoint)
+            dpHand3Dpoint = {0,0,0}
+            rs.rs2_deproject_pixel_to_point(dpHand3Dpoint, intrinsics, {x,y}, handdepth)
+            print("Hand 3D deprojected oint = " + dpHand3Dpoint)
+
 
         if depth_colormap_dim != color_colormap_dim or 1:
              
