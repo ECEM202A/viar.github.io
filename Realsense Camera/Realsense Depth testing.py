@@ -144,8 +144,8 @@ try:
         detection_result = detect_pose_landmarks_from_array(crop_img, detector)
         annotated_image = draw_landmarks_on_image(crop_img, detection_result)
         #hand position data
-        hand_position = [160,120]
-        #hand_position = get_hand_position()
+        #hand_position = {160,120}
+        hand_position = get_hand_position()
         x = hand_position[0]
         y = hand_position[1]
         print("previous handdepth = " + str(previousHandDepth))
