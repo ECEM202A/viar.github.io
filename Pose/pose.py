@@ -42,12 +42,13 @@ def draw_landmarks_on_image(rgb_image, detection_result):
             landmark_pb2.NormalizedLandmark(x=landmark.x, y=landmark.y, z=landmark.z)
             for landmark in pose_landmarks
         ])
-       # solutions.drawing_utils.draw_landmarks(
-        #    annotated_image,
-         #   pose_landmarks_proto,
-          #  solutions.pose.POSE_CONNECTIONS,
-           # solutions.drawing_styles.get_default_pose_landmarks_style()
-        #)
+
+        solutions.drawing_utils.draw_landmarks(
+            annotated_image,
+            pose_landmarks_proto,
+            solutions.pose.POSE_CONNECTIONS,
+            solutions.drawing_styles.get_default_pose_landmarks_style()
+        )
 
         # Add landmark indices as numbers
         for i, landmark in enumerate(pose_landmarks):
