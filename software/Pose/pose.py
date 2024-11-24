@@ -99,6 +99,8 @@ while True:
                 face_coordination_in_real_world[0][2] + forward_vector[2] * 1000
             ])
 
+            print(f"Forward Vector: {forward_vector}")
+
             # Project the nose and direction point onto the 2D image plane
             nose_tip_2d, _ = cv2.projectPoints(
                 np.array([face_coordination_in_real_world[0]]), rotation_vec, translation_vec, cam_matrix, dist_matrix
