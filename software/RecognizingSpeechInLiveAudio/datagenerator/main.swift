@@ -6,7 +6,7 @@ A simple utility for generating Custom LM training data
 */
 
 import Speech
-
+print("trying")
 let data = SFCustomLanguageModelData(locale: Locale(identifier: "en_US"), identifier: "com.apple.SpokenWord", version: "1.0") {
     
     SFCustomLanguageModelData.PhraseCount(phrase: "Play the Albin counter gambit", count: 10)
@@ -30,6 +30,7 @@ let data = SFCustomLanguageModelData(locale: Locale(identifier: "en_US"), identi
 //    SFCustomLanguageModelData.PhraseCount(phrase: "Play the Winawer variation", count: 10)
 //    SFCustomLanguageModelData.PhraseCount(phrase: "Play the Tartakower", count: 10)
 }
-
-try await data.export(to: URL(filePath: "/var/tmp/CustomLMData.bin"))
+let path = FileManager.default.currentDirectoryPath
+try await data.export(to: URL(filePath: path + "/../SpokenWord/customlm/en_US/customLMDataVIAR.bin"))
+print("done")
 
