@@ -5,6 +5,41 @@
 ##      Open CV and Numpy integration        ##
 ###############################################
 
+import socket
+import keyboard        
+from tkinter import CURRENT
+import pyrealsense2 as rs
+import numpy as np
+import cv2
+import torch
+from PIL import Image
+import sys
+sys.path.append('C:/Users/User/Source/Repos/viar.github.io/software')
+print(sys.path)
+from Pose.pose_landmark_pnp import *  # Now this works
+className = "No Object"
+object3Dpoint = [0,0,0]
+objectdepth = 0
+min_distance = 0.01
+max_distance = 8
+drawline = 1
+pose,ML = 0,0
+x,y = 0,0
+prevObject3Dpoint = [0,0,0]
+dpObject3Dpoint = 0,0,0
+poseObject = init_pose(300,300)
+model = torch.hub.load("software/yolov7", 'custom', 'software/yolov7.pt', source='local', force_reload=False) if ML == 2 else 0
+className =  ('person', 'bicycle', 'car', 'motorcycle', 'airplane', 'bus', 'train', 'truck', 'boat', 'traffic light',
+         'fire hydrant', 'stop sign', 'parking meter', 'bench', 'bird', 'cat', 'dog', 'horse', 'sheep', 'cow',
+         'elephant', 'bear', 'zebra', 'giraffe', 'backpack', 'umbrella', 'handbag', 'tie', 'suitcase', 'frisbee',
+         'skis', 'snowboard', 'sports ball', 'kite', 'baseball bat', 'baseball glove', 'skateboard', 'surfboard',
+         'tennis racket', 'bottle', 'wine glass', 'cup', 'fork', 'knife', 'spoon', 'bowl', 'banana', 'apple',
+         'sandwich', 'orange', 'broccoli', 'carrot', 'hot dog', 'pizza', 'donut', 'cake', 'chair', 'couch',
+         'potted plant', 'bed', 'dining table', 'toilet', 'tv', 'laptop', 'mouse', 'remote', 'keyboard', 'cell phone',
+         'microwave', 'oven', 'toaster', 'sink', 'refrigerator', 'book', 'clock', 'vase', 'scissors', 'teddy bear',
+         'hair drier', 'toothbrush' )
+
+previousHandDepth  = handdepth = 9.0
 def get_depth(rgb_image,depth_image,x,y):
 # Get dimensions of both images
     rgb_height, rgb_width, _ = rgb_image.shape
@@ -51,40 +86,6 @@ def findObject(frame,depth_frame,objectName):
             return crop_img,object3Dpoint
                
 
-import keyboard        
-from tkinter import CURRENT
-import pyrealsense2 as rs
-import numpy as np
-import cv2
-import torch
-from PIL import Image
-import sys
-sys.path.append('C:/Users/User/Source/Repos/viar.github.io/software')
-print(sys.path)
-from Pose.pose_landmark_pnp import *  # Now this works
-className = "No Object"
-object3Dpoint = [0,0,0]
-objectdepth = 0
-min_distance = 0.01
-max_distance = 8
-drawline = 1
-pose,ML = 1,2
-x,y = 0,0
-prevObject3Dpoint = [0,0,0]
-dpObject3Dpoint = 0,0,0
-poseObject = init_pose(300,300)
-model = torch.hub.load("software/yolov7", 'custom', 'software/yolov7.pt', source='local', force_reload=False) if ML == 2 else 0
-className =  ('person', 'bicycle', 'car', 'motorcycle', 'airplane', 'bus', 'train', 'truck', 'boat', 'traffic light',
-         'fire hydrant', 'stop sign', 'parking meter', 'bench', 'bird', 'cat', 'dog', 'horse', 'sheep', 'cow',
-         'elephant', 'bear', 'zebra', 'giraffe', 'backpack', 'umbrella', 'handbag', 'tie', 'suitcase', 'frisbee',
-         'skis', 'snowboard', 'sports ball', 'kite', 'baseball bat', 'baseball glove', 'skateboard', 'surfboard',
-         'tennis racket', 'bottle', 'wine glass', 'cup', 'fork', 'knife', 'spoon', 'bowl', 'banana', 'apple',
-         'sandwich', 'orange', 'broccoli', 'carrot', 'hot dog', 'pizza', 'donut', 'cake', 'chair', 'couch',
-         'potted plant', 'bed', 'dining table', 'toilet', 'tv', 'laptop', 'mouse', 'remote', 'keyboard', 'cell phone',
-         'microwave', 'oven', 'toaster', 'sink', 'refrigerator', 'book', 'clock', 'vase', 'scissors', 'teddy bear',
-         'hair drier', 'toothbrush' )
-
-previousHandDepth  = handdepth = 9.0
 #Configure pose detection
 #MODEL_PATH = os.path.expanduser('../Pose/pose_landmarker_full.task')
 # Init PoseLandmarker
@@ -101,6 +102,12 @@ device_product_line = str(device.get_info(rs.camera_info.product_line))
 depth_sensor = pipeline_profile.get_device().first_depth_sensor()
 depth_scale = depth_sensor.get_depth_scale()
 
+#UDP setup
+sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+server_address = ('localhost', 10000)
+sock.bind(server_address)
+sock.setblocking(False)
+
 
 
 depth_sensor.set_option(rs.option.min_distance, min_distance)  # Set minimum distance
@@ -115,14 +122,31 @@ if not found_rgb:
     print("The demo requires Depth camera with Color sensor")
     exit(0)
 
-config.enable_stream(rs.stream.color, 640, 480, rs.format.bgr8, 30)
-config.enable_stream(rs.stream.depth, 320, 240, rs.format.z16, 30)
+config.enable_stream(rs.stream.color, 640, 480, rs.format.bgr8, 30) #enable 640x480 color 
+config.enable_stream(rs.stream.depth, 320, 240, rs.format.z16, 30)#enable 320x240 depth
 
 # Start streaming
 pipeline.start(config)
 
 try:
     while True:
+
+        #UDP TEST
+        # Receive data from the client
+        try:
+            # Attempt to receive data
+            data, address = sock.recvfrom(4096)
+            print(f"Received {len(data)} bytes from {address}: {data.decode('utf-8')}")
+        except BlockingIOError:
+        # Handle cases where no data is available
+            #print("No data available, continuing...")
+            if(0):
+                print("no data received")
+
+
+        # Send a response back to the client
+
+        #UDP TEST
 
         # Wait for a coherent pair of frames: depth and color
         frames = pipeline.wait_for_frames()
@@ -137,10 +161,7 @@ try:
             continue
 
         # Convert images to numpy arrays
-        depth_image = np.asanyarray(depth_frame.get_data())
-        
-        
-
+        depth_image = np.asanyarray(depth_frame.get_data())     
         color_image = np.asanyarray(color_frame.get_data())
 
         # Apply colormap on depth image (image must be converted to 8-bit per pixel first)
@@ -163,7 +184,7 @@ try:
             height, width = color_image.shape[:2]
             expected = 300
             aspect = width / height
-            resized_image = cv2.resize(color_image, (round(expected * aspect), expected))
+            resized_image = cv2.resize(color_image, (round(expected * aspect), expected)) #resize image to 300x300 for ML model
             #resized_depthmap = cv2.resize(depth_image, (round(expected * aspect), expected))
             crop_start = round(expected * (aspect - 1) / 2)
             crop_img = resized_image[0:expected, crop_start:crop_start+expected]
@@ -203,19 +224,16 @@ try:
      
                     #cv2.putText(crop_img,str(objectmidpoint) + str(objectdepth) + "meters",objectmidpoint,cv2.FONT_HERSHEY_COMPLEX,0.5,(255,255,255))
                     object3Dpoint = [objectmidpoint[0],objectmidpoint[1], objectdepth]
-            if(ML == 2 and keyboard.is_pressed('a') ):
+            if(ML == 2 and keyboard.is_pressed('a') ):#reset object position
                crop_img,object3Dpoint =  findObject(crop_img,depth_image,"bottle")
-                    #cv2.putText(crop_img, className, 
-                     #           (int(xmin * expected), int(ymin * expected) - 5),
-                      #          cv2.FONT_HERSHEY_COMPLEX, 0.5, (255,255,255))
-               prevObject3Dpoint = int(object3Dpoint[0]*640/300),int(object3Dpoint[1]*480/300), object3Dpoint[2]
+               #cv2.putText(crop_img, className,(int(xmin * expected), int(ymin * expected) - 5),cv2.FONT_HERSHEY_COMPLEX, 0.5, (255,255,255))
+               prevObject3Dpoint = int(object3Dpoint[0]*640/300),int(object3Dpoint[1]*480/300), object3Dpoint[2] #prevObject3D takes 3D point and converts to color frame pixels
                dpObject3Dpoint= rs.rs2_deproject_pixel_to_point(intrinsics, (prevObject3Dpoint[0],prevObject3Dpoint[1]), float(prevObject3Dpoint[2]))
                dpObject3Dpoint = tuple(round(value, 2) for value in dpObject3Dpoint)
 
                crop_img = cv2.cvtColor(crop_img, cv2.COLOR_RGB2BGR)
-            else:
+            else:#use previous object point to draw circle
                 cv2.circle(crop_img, (object3Dpoint[0], object3Dpoint[1]), 10, (0, 255, 0), -1)  # Draw a green circle for the right wrist
-                
                 cv2.putText(
                             crop_img, str(dpObject3Dpoint[0]) + "," + str(dpObject3Dpoint[1]) + "," + str(dpObject3Dpoint[2]) + "meters", (object3Dpoint[0],object3Dpoint[1]), 
                             fontFace=cv2.FONT_HERSHEY_SIMPLEX, 
