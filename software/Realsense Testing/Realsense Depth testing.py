@@ -23,7 +23,7 @@ objectdepth = 0
 min_distance = 0.01
 max_distance = 8
 drawline = 1
-pose,ML = 0,0
+pose,ML = 1,2
 x,y = 0,0
 prevObject3Dpoint = [0,0,0]
 dpObject3Dpoint = 0,0,0
@@ -234,6 +234,8 @@ try:
                crop_img = cv2.cvtColor(crop_img, cv2.COLOR_RGB2BGR)
             else:#use previous object point to draw circle
                 cv2.circle(crop_img, (object3Dpoint[0], object3Dpoint[1]), 10, (0, 255, 0), -1)  # Draw a green circle for the right wrist
+                #cv2.circle(depth_colormap, (int(object3Dpoint[0]*640/300), int(object3Dpoint[1]*480/300)), 10, (0, 255, 0), -1)  # Draw a green circle for the right wrist
+
                 cv2.putText(
                             crop_img, str(dpObject3Dpoint[0]) + "," + str(dpObject3Dpoint[1]) + "," + str(dpObject3Dpoint[2]) + "meters", (object3Dpoint[0],object3Dpoint[1]), 
                             fontFace=cv2.FONT_HERSHEY_SIMPLEX, 
