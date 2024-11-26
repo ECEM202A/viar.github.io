@@ -83,15 +83,15 @@ while True:
                 # Get key points
         nose = np.array([landmarks[mp_pose.PoseLandmark.NOSE].x * w,
                          landmarks[mp_pose.PoseLandmark.NOSE].y * h,
-                         landmarks[mp_pose.PoseLandmark.NOSE].z])
+                         landmarks[mp_pose.PoseLandmark.NOSE].z*100])
 
         left_eye = np.array([landmarks[mp_pose.PoseLandmark.LEFT_EYE].x * w,
                              landmarks[mp_pose.PoseLandmark.LEFT_EYE].y * h,
-                             landmarks[mp_pose.PoseLandmark.LEFT_EYE].z])
+                             landmarks[mp_pose.PoseLandmark.LEFT_EYE].z*100])
 
         right_eye = np.array([landmarks[mp_pose.PoseLandmark.RIGHT_EYE].x * w,
                               landmarks[mp_pose.PoseLandmark.RIGHT_EYE].y * h,
-                              landmarks[mp_pose.PoseLandmark.RIGHT_EYE].z])
+                              landmarks[mp_pose.PoseLandmark.RIGHT_EYE].z*100])
 
         # Compute eye center
         eye_center = (left_eye + right_eye) / 2
@@ -110,7 +110,7 @@ while True:
         manual_forward_point = np.array([
             nose[0] - manual_forward_vector[0] * 10,  # Extend for visualization
             nose[1],# + manual_forward_vector[1] * 100,
-            nose[2] + manual_forward_vector[2] * 10
+            nose[2]* + manual_forward_vector[2] * 10
         ])
 
         print(f"Forward Vector: {manual_forward_vector}")
