@@ -46,11 +46,12 @@ def findObject(frame,depth_frame,objectName):
      
             object3Dpoint = [objectmidpoint[0],objectmidpoint[1], objectdepth]
             cv2.putText(crop_img, label + str(object3Dpoint) , (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+            print(str(object3Dpoint))
 
             return crop_img,object3Dpoint
                
 
-        
+import keyboard        
 from tkinter import CURRENT
 import pyrealsense2 as rs
 import numpy as np
@@ -60,16 +61,19 @@ from PIL import Image
 import sys
 sys.path.append('C:/Users/User/Source/Repos/viar.github.io/software')
 print(sys.path)
-from Pose.pose import *  # Now this works
+from Pose.pose_landmark_pnp import *  # Now this works
 className = "No Object"
 object3Dpoint = [0,0,0]
 objectdepth = 0
 min_distance = 0.01
 max_distance = 8
-drawline = 0
-pose,ML = 0,0
+drawline = 1
+pose,ML = 1,2
 x,y = 0,0
-model = torch.hub.load("software/yolov7", 'custom', 'software/yolov7.pt', source='local', force_reload=False)
+prevObject3Dpoint = [0,0,0]
+dpObject3Dpoint = 0,0,0
+poseObject = init_pose(300,300)
+model = torch.hub.load("software/yolov7", 'custom', 'software/yolov7.pt', source='local', force_reload=False) if ML == 2 else 0
 className =  ('person', 'bicycle', 'car', 'motorcycle', 'airplane', 'bus', 'train', 'truck', 'boat', 'traffic light',
          'fire hydrant', 'stop sign', 'parking meter', 'bench', 'bird', 'cat', 'dog', 'horse', 'sheep', 'cow',
          'elephant', 'bear', 'zebra', 'giraffe', 'backpack', 'umbrella', 'handbag', 'tie', 'suitcase', 'frisbee',
@@ -197,14 +201,30 @@ try:
                     objectdepth = depth_image[objectmidpoint].astype(float)
                     objectdepth = "{:.2f}".format(objectdepth * depth_scale)
      
-                    cv2.putText(crop_img,str(objectmidpoint) + str(objectdepth) + "meters",objectmidpoint,cv2.FONT_HERSHEY_COMPLEX,0.5,(255,255,255))
+                    #cv2.putText(crop_img,str(objectmidpoint) + str(objectdepth) + "meters",objectmidpoint,cv2.FONT_HERSHEY_COMPLEX,0.5,(255,255,255))
                     object3Dpoint = [objectmidpoint[0],objectmidpoint[1], objectdepth]
-            if(ML == 2):
-                findObject(crop_img,depth_image,"bottle")
+            if(ML == 2 and keyboard.is_pressed('a') ):
+               crop_img,object3Dpoint =  findObject(crop_img,depth_image,"bottle")
                     #cv2.putText(crop_img, className, 
                      #           (int(xmin * expected), int(ymin * expected) - 5),
                       #          cv2.FONT_HERSHEY_COMPLEX, 0.5, (255,255,255))
-                crop_img = cv2.cvtColor(crop_img, cv2.COLOR_RGB2BGR)
+               prevObject3Dpoint = int(object3Dpoint[0]*640/300),int(object3Dpoint[1]*480/300), object3Dpoint[2]
+               dpObject3Dpoint= rs.rs2_deproject_pixel_to_point(intrinsics, (prevObject3Dpoint[0],prevObject3Dpoint[1]), float(prevObject3Dpoint[2]))
+               dpObject3Dpoint = tuple(round(value, 2) for value in dpObject3Dpoint)
+
+               crop_img = cv2.cvtColor(crop_img, cv2.COLOR_RGB2BGR)
+            else:
+                cv2.circle(crop_img, (object3Dpoint[0], object3Dpoint[1]), 10, (0, 255, 0), -1)  # Draw a green circle for the right wrist
+                
+                cv2.putText(
+                            crop_img, str(dpObject3Dpoint[0]) + "," + str(dpObject3Dpoint[1]) + "," + str(dpObject3Dpoint[2]) + "meters", (object3Dpoint[0],object3Dpoint[1]), 
+                            fontFace=cv2.FONT_HERSHEY_SIMPLEX, 
+                            fontScale=0.4, 
+                            color=(255, 0, 0), 
+                            thickness=1, 
+                            lineType=cv2.LINE_AA
+
+                    )
 
                  
 
@@ -214,18 +234,31 @@ try:
         #pose detection
         #hand position data
         #hand_position = {160,120}
-        init_pose(expected,expected)
         if(pose == 1):
-           [annotated_image,x,y] = draw_pose(crop_img)
+           [annotated_image,x,y] = draw_pose(crop_img,poseObject)
+           previousHandDepth = get_depth(annotated_image,depth_image,x,y)
+           x = int(x/300*640)
+           y=int(y/300*480)
+           annotated_image = cv2.resize(annotated_image, dsize = (640,480), interpolation=cv2.INTER_AREA)
+           
+
+           #cv2.putText(
+            #                annotated_image, str(x) + "," + str(y) + "," + str(previousHandDepth) + "meters", (int(x), int(y)), 
+             #               fontFace=cv2.FONT_HERSHEY_SIMPLEX, 
+              #              fontScale=0.4, 
+               #             color=(255, 0, 0), 
+                #            thickness=1, 
+                 #           lineType=cv2.LINE_AA
+
+                  #  )
+
         else:
             annotated_image = crop_img
-        if(x!=0 and y!=0 and x<=300 and y<=300):
-            depth_x = int(x*320.0/300.0)
-            depth_y = int(y*240.0/300.0)
-            scaled_x = int(x*640.0/300.0)
-            scaled_y = int(y*480.0/300.0)
-            print(" pose = " + str(x) + ", " + str(y) + " depth = " + str(depth_x) + "," + str(depth_y) + " scaled = " + str(scaled_x) + "," + str(scaled_y))
-            cv2.circle(depth_colormap, (scaled_x, scaled_y), 10, (0, 255, 0), -1)  # Draw a green circle for the right wrist
+        if(x!=0 and y!=0 and x<=640 and y<=480):
+            depth_x = x
+            depth_y = y
+            print(" pose = " + str(x) + ", " + str(y) + " depth = " + str(depth_x) + "," + str(depth_y) )
+            cv2.circle(depth_colormap, (depth_x, depth_y), 10, (0, 255, 0), -1)  # Draw a green circle for the right wrist
 
 
 
@@ -233,22 +266,25 @@ try:
 
             
             print("previous handdepth = " + str(previousHandDepth))
-            handdepth = depth_image[depth_x][depth_y].astype(float) * depth_scale
-            print("current handdepth at " + str(scaled_x) + ", " + str(scaled_y) + " = " + str(handdepth) )
+            handdepth =get_depth(annotated_image,depth_image,x,y)
+            print("current handdepth at " + str(x) + ", " + str(y) + " = " + str(handdepth) )
 
 
-            if(x<480 and y < 640 and (handdepth > 0 and (handdepth < (float(previousHandDepth)+ 1.0)))):
+            if(x<480 and y < 640 and (handdepth > 0 )):
                 previousHandDepth = handdepth
                 hand3Dpoint = [x,y,handdepth]
                 handdepth = "{:.2f}".format(handdepth)
                 if(drawline == 1):
-                    drawline = 0
+                   # drawline = 0
                     print("drawing line")
-                    annotated_image = cv2.line(annotated_image, (hand3Dpoint[0],hand3Dpoint[1]), (object3Dpoint[0],object3Dpoint[1]), (255,0,0))
+                    annotated_image = cv2.line(annotated_image, (hand3Dpoint[0],hand3Dpoint[1]), (prevObject3Dpoint[0],prevObject3Dpoint[1]), (255,0,0))
 
                 print(str(hand_position) + "," + handdepth)
+                dpHand3Dpoint= rs.rs2_deproject_pixel_to_point(intrinsics, (hand3Dpoint[0],hand3Dpoint[1]), float(hand3Dpoint[2]))
+                dpHand3Dpoint = tuple(round(value, 2) for value in dpHand3Dpoint)
+
                 cv2.putText(
-                            annotated_image, str(scaled_x) + "," + str(scaled_y) + "," + str(previousHandDepth) + "meters", (x, y), 
+                            annotated_image, str(dpHand3Dpoint[0]) + "," + str(dpHand3Dpoint[1]) + "," + str(dpHand3Dpoint[2]) + "meters", (x, y), 
                             fontFace=cv2.FONT_HERSHEY_SIMPLEX, 
                             fontScale=0.4, 
                             color=(255, 0, 0), 
@@ -257,12 +293,10 @@ try:
 
                     )
                 
-                dpObject3Dpoint= rs.rs2_deproject_pixel_to_point(intrinsics, [object3Dpoint[0],object3Dpoint[1]], float(objectdepth))
                 #print(className + "  Object 3D point = " + str(object3Dpoint))
                 #print("Object 3D deprojected Point = " + str(dpObject3Dpoint))
 
                 #print("Hand 3D point = " + str(hand3Dpoint))
-                dpHand3Dpoint= rs.rs2_deproject_pixel_to_point(intrinsics, [x,y], float(handdepth))
                 #print("Hand 3D deprojected Point = " + str(dpHand3Dpoint))
 
 
@@ -274,7 +308,7 @@ try:
             
        
 
-        images = cv2.resize(images, (1280,720))
+       #images = cv2.resize(images, (1280,720))
 
 
         # Show images
