@@ -7,9 +7,17 @@ The root view controller that provides a button to start and stop recording, and
 
 import UIKit
 import Speech
+import Foundation
+import AVKit
 
 public class ViewController: UIViewController, SFSpeechRecognizerDelegate {
     // MARK: Properties
+    private var audioFile = "test_song"
+        
+    private var player: AVAudioPlayer?
+    private var isplaying = false
+    private var totalTime: TimeInterval = 0.0
+    private var currentTime: TimeInterval = 0.0
     
     private let speechRecognizer = SFSpeechRecognizer(locale: Locale(identifier: "en-US"))!
     
@@ -101,7 +109,7 @@ public class ViewController: UIViewController, SFSpeechRecognizerDelegate {
         
         // Configure the audio session for the app.
         let audioSession = AVAudioSession.sharedInstance()
-        try audioSession.setCategory(.record, mode: .measurement, options: .duckOthers)
+        try audioSession.setCategory(.playAndRecord, mode: .measurement, options: .duckOthers)
         try audioSession.setActive(true, options: .notifyOthersOnDeactivation)
         let inputNode = audioEngine.inputNode
 
@@ -125,7 +133,14 @@ public class ViewController: UIViewController, SFSpeechRecognizerDelegate {
             
             if let result = result {
                 // Update the text view with the results.
-                self.textView.text = result.bestTranscription.formattedString
+                let recognized_text = result.bestTranscription.formattedString
+                if recognized_text.contains("keys") {
+                    self.textView.text = "keys keyword found"
+                } else {
+                    self.textView.text = "No keyword found"
+                }
+//                self.textView.text = result.bestTranscription.formattedString
+                
                 isFinal = result.isFinal
             }
             
@@ -168,12 +183,19 @@ public class ViewController: UIViewController, SFSpeechRecognizerDelegate {
     }
     
     // MARK: Interface Builder actions
+
+    @IBAction func playSound(_ sender: Any) {
+        setupAudio()
+    }
     
     @IBAction func recordButtonTapped() {
+        
         if audioEngine.isRunning {
             audioEngine.stop()
             recognitionRequest?.endAudio()
             recordButton.isEnabled = false
+//            setupAudio()
+//            sleep(10)
             recordButton.setTitle("Stopping", for: .disabled)
         } else {
             do {
@@ -184,5 +206,40 @@ public class ViewController: UIViewController, SFSpeechRecognizerDelegate {
             }
         }
     }
+    
+    public func setupAudio() {
+            guard let url = Bundle.main.url(forResource: audioFile, withExtension: "mp3") else { return }
+        let audiofile = try! AVAudioFile(forReading: url)
+//        let playernode = AVAudioPlayerNode()
+//        audioEngine.attach(playernode)
+//        audioEngine.connect(playernode,
+//                            to: audioEngine.outputNode,
+//                            format: audiofile.processingFormat)
+//        playernode.scheduleFile(audiofile,
+//                                at: nil,
+//                                completionCallbackType: .dataPlayedBack) { _ in
+//            /* Handle any work that's necessary after playback. */
+//        }
+//        do {
+//            try audioEngine.start()
+//            playernode.play()
+//        } catch {
+//            /* Handle the error. */
+//        }
+            do {
+                print("trying audio")
+                player = try AVAudioPlayer(contentsOf: url)
+                player?.prepareToPlay()
+               totalTime = player?.duration ?? 0.0
+                playAudio()
+            } catch {
+                print("Error loading audio: \(error)")
+            }
+        }
+    
+    public func playAudio() {
+            player?.play()
+            isplaying = true
+        }
 }
 

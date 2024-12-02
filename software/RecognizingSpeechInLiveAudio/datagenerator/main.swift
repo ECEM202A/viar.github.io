@@ -31,6 +31,6 @@ let data = SFCustomLanguageModelData(locale: Locale(identifier: "en_US"), identi
 //    SFCustomLanguageModelData.PhraseCount(phrase: "Play the Tartakower", count: 10)
 }
 let path = FileManager.default.currentDirectoryPath
-try await data.export(to: URL(filePath: path + "/../SpokenWord/customlm/en_US/customLMDataVIAR.bin"))
+try await data.export(to: URL(filePath: path + "/../SpokenWord/customlm/en_US/customLMData.bin"))
 print("done")
 

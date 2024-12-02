@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -15,6 +15,8 @@
 		738998C021515C9A00E378D8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 738998BE21515C9A00E378D8 /* LaunchScreen.storyboard */; };
 		9A853EAA2A0191CC00FEAE5E /* customlm in Resources */ = {isa = PBXBuildFile; fileRef = 9A853EA92A0191CC00FEAE5E /* customlm */; };
 		9A853EB22A0196B500FEAE5E /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A853EB12A0196B500FEAE5E /* main.swift */; };
+		9CD9F8222CF54D7A0085F4EC /* SwiftAudioEx in Frameworks */ = {isa = PBXBuildFile; productRef = 9CD9F8212CF54D7A0085F4EC /* SwiftAudioEx */; };
+		9CD9F8DD2CF6AF180085F4EC /* test_song.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 9CD9F8DC2CF6AF180085F4EC /* test_song.mp3 */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -41,8 +43,9 @@
 		9A853EA92A0191CC00FEAE5E /* customlm */ = {isa = PBXFileReference; lastKnownFileType = folder; path = customlm; sourceTree = "<group>"; };
 		9A853EAF2A0196B500FEAE5E /* datagenerator */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = datagenerator; sourceTree = BUILT_PRODUCTS_DIR; };
 		9A853EB12A0196B500FEAE5E /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
-		F30A48563BC3EAE408DA91B3 /* SampleCode.xcconfig */ = {isa = PBXFileReference; name = SampleCode.xcconfig; path = Configuration/SampleCode.xcconfig; sourceTree = "<group>"; };
-		FCA3813F8DC6D171AB712B51 /* LICENSE.txt */ = {isa = PBXFileReference; includeInIndex = 1; path = LICENSE.txt; sourceTree = "<group>"; };
+		9CD9F8DC2CF6AF180085F4EC /* test_song.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = test_song.mp3; sourceTree = "<group>"; };
+		F30A48563BC3EAE408DA91B3 /* SampleCode.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = SampleCode.xcconfig; path = Configuration/SampleCode.xcconfig; sourceTree = "<group>"; };
+		FCA3813F8DC6D171AB712B51 /* LICENSE.txt */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = LICENSE.txt; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -50,6 +53,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9CD9F8222CF54D7A0085F4EC /* SwiftAudioEx in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -72,6 +76,7 @@
 				738998B321515C9900E378D8 /* Products */,
 				D058EB7E4F0D06DE7CA9290A /* Configuration */,
 				AE91C1619D46B1844D542CE9 /* LICENSE */,
+				9CD9F81D2CF54C790085F4EC /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -94,6 +99,7 @@
 				738998BC21515C9A00E378D8 /* Assets.xcassets */,
 				738998BE21515C9A00E378D8 /* LaunchScreen.storyboard */,
 				738998C121515C9A00E378D8 /* Info.plist */,
+				9CD9F8DC2CF6AF180085F4EC /* test_song.mp3 */,
 			);
 			path = SpokenWord;
 			sourceTree = "<group>";
@@ -106,12 +112,18 @@
 			path = datagenerator;
 			sourceTree = "<group>";
 		};
+		9CD9F81D2CF54C790085F4EC /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		AE91C1619D46B1844D542CE9 /* LICENSE */ = {
 			isa = PBXGroup;
 			children = (
 				FCA3813F8DC6D171AB712B51 /* LICENSE.txt */,
 			);
-			name = LICENSE;
 			path = LICENSE;
 			sourceTree = "<group>";
 		};
@@ -189,6 +201,9 @@
 				Base,
 			);
 			mainGroup = 738998A921515C9900E378D8;
+			packageReferences = (
+				9CD9F8202CF54D710085F4EC /* XCRemoteSwiftPackageReference "SwiftAudioEx" */,
+			);
 			productRefGroup = 738998B321515C9900E378D8 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -209,6 +224,7 @@
 				738998BD21515C9A00E378D8 /* Assets.xcassets in Resources */,
 				736165992176725C0062D377 /* README.md in Resources */,
 				738998BB21515C9900E378D8 /* Main.storyboard in Resources */,
+				9CD9F8DD2CF6AF180085F4EC /* test_song.mp3 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -378,7 +394,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 6KZZ7JFM3B;
 				INFOPLIST_FILE = SpokenWord/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -398,7 +414,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 6KZZ7JFM3B;
 				INFOPLIST_FILE = SpokenWord/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -482,6 +498,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		9CD9F8202CF54D710085F4EC /* XCRemoteSwiftPackageReference "SwiftAudioEx" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/doublesymmetry/SwiftAudioEx.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.1.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		9CD9F8212CF54D7A0085F4EC /* SwiftAudioEx */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9CD9F8202CF54D710085F4EC /* XCRemoteSwiftPackageReference "SwiftAudioEx" */;
+			productName = SwiftAudioEx;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 738998AA21515C9900E378D8 /* Project object */;
 }
