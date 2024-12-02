@@ -18,6 +18,7 @@ public class ViewController: UIViewController, SFSpeechRecognizerDelegate {
     private var isplaying = false
     private var totalTime: TimeInterval = 0.0
     private var currentTime: TimeInterval = 0.0
+    private var soundPlaying = false
     
     private let speechRecognizer = SFSpeechRecognizer(locale: Locale(identifier: "en-US"))!
     
@@ -185,7 +186,11 @@ public class ViewController: UIViewController, SFSpeechRecognizerDelegate {
     // MARK: Interface Builder actions
 
     @IBAction func playSound(_ sender: Any) {
-        setupAudio()
+        if soundPlaying {
+            stopAudio()
+        } else {
+            setupAudio()
+        }
     }
     
     @IBAction func recordButtonTapped() {
@@ -238,8 +243,12 @@ public class ViewController: UIViewController, SFSpeechRecognizerDelegate {
         }
     
     public func playAudio() {
-            player?.play()
-            isplaying = true
+        player?.play()
+        soundPlaying = true
+        }
+    public func stopAudio() {
+        player?.stop()
+        soundPlaying = false
         }
 }
 
