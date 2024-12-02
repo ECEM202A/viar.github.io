@@ -8,13 +8,13 @@
 import socket
 import keyboard        
 from tkinter import CURRENT
-import pyrealsense2 as rs
+import pyrealsense2.pyrealsense2 as rs
 import numpy as np
 import cv2
 import torch
 from PIL import Image
 import sys
-sys.path.append('C:/Users/User/Source/Repos/viar.github.io/software')
+sys.path.append('C:/Users/alexh/OneDrive/Desktop/UCLA Q1/ECE M202A/Project/VIAR/software')
 print(sys.path)
 from Pose.pose_landmark_pnp import *  # Now this works
 className = "No Object"
@@ -28,7 +28,7 @@ x,y = 0,0
 prevObject3Dpoint = [0,0,0]
 dpObject3Dpoint = 0,0,0
 poseObject = init_pose(300,300)
-model = torch.hub.load("software/yolov7", 'custom', 'software/yolov7.pt', source='local', force_reload=False) if ML == 2 else 0
+model = torch.hub.load("yolov7", 'custom', 'yolov7.pt', source='local', force_reload=True) if ML == 2 else 0
 className =  ('person', 'bicycle', 'car', 'motorcycle', 'airplane', 'bus', 'train', 'truck', 'boat', 'traffic light',
          'fire hydrant', 'stop sign', 'parking meter', 'bench', 'bird', 'cat', 'dog', 'horse', 'sheep', 'cow',
          'elephant', 'bear', 'zebra', 'giraffe', 'backpack', 'umbrella', 'handbag', 'tie', 'suitcase', 'frisbee',
@@ -40,6 +40,7 @@ className =  ('person', 'bicycle', 'car', 'motorcycle', 'airplane', 'bus', 'trai
          'hair drier', 'toothbrush' )
 
 previousHandDepth  = handdepth = 9.0
+                
 def get_depth(rgb_image,depth_image,x,y):
 # Get dimensions of both images
     rgb_height, rgb_width, _ = rgb_image.shape
@@ -72,7 +73,7 @@ def findObject(frame,depth_frame,objectName):
         y = int((y1 +y2) /2)
         if(className[int(cls)] == objectName):
         # Draw bounding box and label
-            print(label)
+            #print(label)
             drawline = 1
             cv2.circle(crop_img, (x,y), 10, (255, 255, 255), 2)#put circle midpoint of object
             objectmidpoint = x,y
@@ -81,7 +82,7 @@ def findObject(frame,depth_frame,objectName):
      
             object3Dpoint = [objectmidpoint[0],objectmidpoint[1], objectdepth]
             cv2.putText(crop_img, label + str(object3Dpoint) , (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
-            print(str(object3Dpoint))
+            #print(str(object3Dpoint))
 
             return crop_img,object3Dpoint
                
@@ -202,7 +203,7 @@ try:
                 blob = cv2.dnn.blobFromImage(crop_img, inScaleFactor, (expected, expected), meanVal, False)
                 net.setInput(blob, "data")
                 detections = net.forward()
-                print(detections.shape)
+                #print(detections.shape)
                 label = detections[0,0,0,1]
                 conf  = detections[0,0,0,2]
                 xmin  = detections[0,0,0,3]
@@ -224,7 +225,7 @@ try:
      
                     #cv2.putText(crop_img,str(objectmidpoint) + str(objectdepth) + "meters",objectmidpoint,cv2.FONT_HERSHEY_COMPLEX,0.5,(255,255,255))
                     object3Dpoint = [objectmidpoint[0],objectmidpoint[1], objectdepth]
-            if(ML == 2 and keyboard.is_pressed('a') ):#reset object position
+            if(ML == 2) and keyboard.is_pressed('a') :#reset object position
                crop_img,object3Dpoint =  findObject(crop_img,depth_image,"bottle")
                #cv2.putText(crop_img, className,(int(xmin * expected), int(ymin * expected) - 5),cv2.FONT_HERSHEY_COMPLEX, 0.5, (255,255,255))
                prevObject3Dpoint = int(object3Dpoint[0]*640/300),int(object3Dpoint[1]*480/300), object3Dpoint[2] #prevObject3D takes 3D point and converts to color frame pixels
@@ -255,12 +256,20 @@ try:
         #hand position data
         #hand_position = {160,120}
         if(pose == 1):
-           [annotated_image,x,y] = draw_pose(crop_img,poseObject)
-           previousHandDepth = get_depth(annotated_image,depth_image,x,y)
-           x = int(x/300*640)
-           y=int(y/300*480)
+           [annotated_image,x_wrist,y_wrist,x_nose,y_nose,forward_vector,head_angle] = draw_pose(crop_img,poseObject)
+           previousHandDepth = get_depth(annotated_image,depth_image,x_wrist,y_wrist)
+           previousNoseDepth = get_depth(annotated_image,depth_image,x_nose,y_nose)
+
+           x_wrist = int(x_wrist/300*640)
+           y_wrist =int(y_wrist/300*480)
+
+           x_nose = int(x_nose/300*640)
+           y_nose =int(y_nose/300*480)
+
            annotated_image = cv2.resize(annotated_image, dsize = (640,480), interpolation=cv2.INTER_AREA)
-           
+
+           angle_object = 361
+
 
            #cv2.putText(
             #                annotated_image, str(x) + "," + str(y) + "," + str(previousHandDepth) + "meters", (int(x), int(y)), 
@@ -274,37 +283,86 @@ try:
 
         else:
             annotated_image = crop_img
-        if(x!=0 and y!=0 and x<=640 and y<=480):
-            depth_x = x
-            depth_y = y
-            print(" pose = " + str(x) + ", " + str(y) + " depth = " + str(depth_x) + "," + str(depth_y) )
+
+
+        if(x_nose!=0 and y_nose!=0 and x_nose<=640 and y_nose<=480):
+            depth_x = x_nose
+            depth_y = y_nose
+            cv2.circle(depth_colormap, (depth_x, depth_y), 10, (0, 255, 0), -1)  # Draw a green circle for the nose
+
+            nose_position = [x_nose, y_nose]
+
+            #print("previous nosedepth = " + str(previousNoseDepth))
+            nosedepth = get_depth(annotated_image, depth_image, x_nose, y_nose)
+            #print("current nosedepth at " + str(x) + ", " + str(y) + " = " + str(nosedepth) )
+
+            if(x_nose<480 and y_nose < 640 and (nosedepth > 0 )):
+                previousNoseDepth = nosedepth
+                nose3Dpoint = [x_nose, y_nose, nosedepth]
+                nosedepth = "{:.2f}".format(nosedepth)
+                if(drawline == 1):
+                # drawline = 0
+                    #print("drawing line")
+                    annotated_image = cv2.line(annotated_image, (nose3Dpoint[0], nose3Dpoint[1]), (prevObject3Dpoint[0], prevObject3Dpoint[1]), (255,0,0))
+
+                #print(str(nose_position) + "," + nosedepth)
+                dpNose3Dpoint = rs.rs2_deproject_pixel_to_point(intrinsics, (nose3Dpoint[0], nose3Dpoint[1]), float(nose3Dpoint[2]))
+                dpNose3Dpoint = tuple(round(value, 2) for value in dpNose3Dpoint)
+
+                cv2.putText(
+                            annotated_image, str(dpNose3Dpoint[0]) + "," + str(dpNose3Dpoint[1]) + "," + str(dpNose3Dpoint[2]) + "meters", (x_nose, y_nose), 
+                            fontFace=cv2.FONT_HERSHEY_SIMPLEX, 
+                            fontScale=0.4, 
+                            color=(255, 0, 0), 
+                            thickness=1, 
+                            lineType=cv2.LINE_AA
+                    )
+                
+                # Convert tuples to NumPy arrays
+                dpNose3Dpoint = np.array(dpNose3Dpoint)
+                dpObject3Dpoint = np.array(dpObject3Dpoint) 
+
+                # Calculate nose to object vector
+                head_to_object_vector = dpObject3Dpoint - dpNose3Dpoint
+
+                # Calculate the nose-object angle
+                angle_object = np.degrees(np.arctan2(head_to_object_vector[0], head_to_object_vector[2]))
+                angle_object += 180
+                if angle_object < 0:
+                    angle_object += 360
+
+
+        if(x_wrist!=0 and y_wrist!=0 and x_wrist<=640 and y_wrist<=480):
+            depth_x = x_wrist
+            depth_y = y_wrist
+            #print(" pose = " + str(x) + ", " + str(y) + " depth = " + str(depth_x) + "," + str(depth_y) )
             cv2.circle(depth_colormap, (depth_x, depth_y), 10, (0, 255, 0), -1)  # Draw a green circle for the right wrist
 
 
 
-            hand_position = [x,y]
+            hand_position = [x_wrist,y_wrist]
 
             
-            print("previous handdepth = " + str(previousHandDepth))
-            handdepth =get_depth(annotated_image,depth_image,x,y)
-            print("current handdepth at " + str(x) + ", " + str(y) + " = " + str(handdepth) )
+            #print("previous handdepth = " + str(previousHandDepth))
+            handdepth =get_depth(annotated_image,depth_image,x_wrist,y_wrist)
+            #print("current handdepth at " + str(x) + ", " + str(y) + " = " + str(handdepth) )
 
 
-            if(x<480 and y < 640 and (handdepth > 0 )):
+            if(x_wrist<480 and y_wrist < 640 and (handdepth > 0 )):
                 previousHandDepth = handdepth
-                hand3Dpoint = [x,y,handdepth]
+                hand3Dpoint = [x_wrist,y_wrist,handdepth]
                 handdepth = "{:.2f}".format(handdepth)
                 if(drawline == 1):
                    # drawline = 0
-                    print("drawing line")
+                    #print("drawing line")
                     annotated_image = cv2.line(annotated_image, (hand3Dpoint[0],hand3Dpoint[1]), (prevObject3Dpoint[0],prevObject3Dpoint[1]), (255,0,0))
 
-                print(str(hand_position) + "," + handdepth)
+                #print(str(hand_position) + "," + handdepth)
                 dpHand3Dpoint= rs.rs2_deproject_pixel_to_point(intrinsics, (hand3Dpoint[0],hand3Dpoint[1]), float(hand3Dpoint[2]))
                 dpHand3Dpoint = tuple(round(value, 2) for value in dpHand3Dpoint)
 
                 cv2.putText(
-                            annotated_image, str(dpHand3Dpoint[0]) + "," + str(dpHand3Dpoint[1]) + "," + str(dpHand3Dpoint[2]) + "meters", (x, y), 
+                            annotated_image, str(dpHand3Dpoint[0]) + "," + str(dpHand3Dpoint[1]) + "," + str(dpHand3Dpoint[2]) + "meters", (x_wrist, y_wrist), 
                             fontFace=cv2.FONT_HERSHEY_SIMPLEX, 
                             fontScale=0.4, 
                             color=(255, 0, 0), 
@@ -319,13 +377,19 @@ try:
                 #print("Hand 3D point = " + str(hand3Dpoint))
                 #print("Hand 3D deprojected Point = " + str(dpHand3Dpoint))
 
-
+                
+        print(f"Head Angle: {head_angle}", f"Head-object Angle: {angle_object}")
+        
         if depth_colormap_dim != color_colormap_dim or 1:
             resized_color_image = cv2.resize(annotated_image, dsize=(depth_colormap_dim[1], depth_colormap_dim[0]), interpolation=cv2.INTER_AREA)
             images = np.hstack((resized_color_image, depth_colormap))
         else:
             images = np.hstack((annotated_image, depth_colormap))
-            
+
+        
+
+
+
        
 
        #images = cv2.resize(images, (1280,720))

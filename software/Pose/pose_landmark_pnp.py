@@ -93,15 +93,15 @@ def draw_pose(frame,pose):
                 # Get key points
         nose = np.array([landmarks[mp_pose.PoseLandmark.NOSE].x * w,
                          landmarks[mp_pose.PoseLandmark.NOSE].y * h,
-                         landmarks[mp_pose.PoseLandmark.NOSE].z])
+                         landmarks[mp_pose.PoseLandmark.NOSE].z*100])
 
         left_eye = np.array([landmarks[mp_pose.PoseLandmark.LEFT_EYE].x * w,
                              landmarks[mp_pose.PoseLandmark.LEFT_EYE].y * h,
-                             landmarks[mp_pose.PoseLandmark.LEFT_EYE].z])
+                             landmarks[mp_pose.PoseLandmark.LEFT_EYE].z*100])
 
         right_eye = np.array([landmarks[mp_pose.PoseLandmark.RIGHT_EYE].x * w,
                               landmarks[mp_pose.PoseLandmark.RIGHT_EYE].y * h,
-                              landmarks[mp_pose.PoseLandmark.RIGHT_EYE].z])
+                              landmarks[mp_pose.PoseLandmark.RIGHT_EYE].z*100])
 
         # Compute eye center
         eye_center = (left_eye + right_eye) / 2
@@ -123,7 +123,11 @@ def draw_pose(frame,pose):
             nose[2] + manual_forward_vector[2] * 10
         ])
 
-        print(f"Forward Vector: {manual_forward_vector}")
+        theta = math.degrees(math.atan2(manual_forward_vector[0], manual_forward_vector[2]))         # Angle in radians
+        if theta < 0:
+            theta += 360
+
+        #print(f"Forward Vector: {manual_forward_vector}")
 
         # Draw the manual forward vector
         p1_manual = (int(nose[0]), int(nose[1]))
@@ -134,13 +138,14 @@ def draw_pose(frame,pose):
     # Draw pose landmarks for visualization
     if pose_results.pose_landmarks:
           h, w, _ = frame.shape  # Get frame dimensions
-          landmark = pose_results.pose_landmarks.landmark[16]  # Right wrist (Landmark 16)
-          cx, cy = int(landmark.x * w), int(landmark.y * h)  # Convert to pixel coordinates
-          cv2.circle(frame, (cx, cy), 10, (0, 255, 0), -1)  # Draw a green circle for the right wrist
+          landmark_wrist = pose_results.pose_landmarks.landmark[16]  # Right wrist (Landmark 16)
+          cx_wrist, cy_wrist = int(landmark_wrist.x * w), int(landmark_wrist.y * h)  # Convert to pixel coordinates
+          landmark_nose = pose_results.pose_landmarks.landmark[0]  # Nose (Landmark 0)
+          cx_nose, cy_nose = int(landmark_nose.x * w), int(landmark_nose.y * h)  # Convert to pixel coordinates
+          cv2.circle(frame, (cx_wrist, cy_wrist), 10, (0, 255, 0), -1)  # Draw a green circle for the right wrist
+          cv2.circle(frame, (cx_nose, cy_nose), 10, (255, 0, 0), -1)  # Draw a red circle for the nose
                 
-          return [frame,cx,cy]
+          return [frame,cx_wrist,cy_wrist,cx_nose,cy_nose,manual_forward_vector,theta]
         #  mp_drawing.draw_landmarks(frame, pose_results.pose_landmarks.landmark[16], mp_pose.POSE_CONNECTIONS)
-    return frame,0,0
+    return frame,0,0,0,0,0,361
         #mp_drawing.draw_landmarks(frame, pose_results.pose_landmarks, mp_pose.POSE_CONNECTIONS)
-
-    #
