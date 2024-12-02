@@ -1,0 +1,953 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		FCDD46542CF01264009C7D6E /* LaptopToWatch Watch App Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = FCDD46312CF01263009C7D6E /* LaptopToWatch Watch App Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		FCDD46112CF011CB009C7D6E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FCDD45F82CF011C9009C7D6E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FCDD45FF2CF011C9009C7D6E;
+			remoteInfo = LaptopToWatch;
+		};
+		FCDD461B2CF011CB009C7D6E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FCDD45F82CF011C9009C7D6E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FCDD45FF2CF011C9009C7D6E;
+			remoteInfo = LaptopToWatch;
+		};
+		FCDD46412CF01264009C7D6E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FCDD45F82CF011C9009C7D6E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FCDD46302CF01263009C7D6E;
+			remoteInfo = "LaptopToWatch Watch App Watch App";
+		};
+		FCDD464B2CF01264009C7D6E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FCDD45F82CF011C9009C7D6E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FCDD46302CF01263009C7D6E;
+			remoteInfo = "LaptopToWatch Watch App Watch App";
+		};
+		FCDD46522CF01264009C7D6E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FCDD45F82CF011C9009C7D6E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FCDD46302CF01263009C7D6E;
+			remoteInfo = "LaptopToWatch Watch App Watch App";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		FCDD46582CF01264009C7D6E /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+				FCDD46542CF01264009C7D6E /* LaptopToWatch Watch App Watch App.app in Embed Watch Content */,
+			);
+			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		FCDD46002CF011C9009C7D6E /* LaptopToWatch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LaptopToWatch.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		FCDD46102CF011CB009C7D6E /* LaptopToWatchTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LaptopToWatchTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		FCDD461A2CF011CB009C7D6E /* LaptopToWatchUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LaptopToWatchUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		FCDD46312CF01263009C7D6E /* LaptopToWatch Watch App Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "LaptopToWatch Watch App Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		FCDD46402CF01264009C7D6E /* LaptopToWatch Watch App Watch AppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "LaptopToWatch Watch App Watch AppTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		FCDD464A2CF01264009C7D6E /* LaptopToWatch Watch App Watch AppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "LaptopToWatch Watch App Watch AppUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		FCDD46022CF011C9009C7D6E /* LaptopToWatch */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = LaptopToWatch;
+			sourceTree = "<group>";
+		};
+		FCDD46132CF011CB009C7D6E /* LaptopToWatchTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = LaptopToWatchTests;
+			sourceTree = "<group>";
+		};
+		FCDD461D2CF011CB009C7D6E /* LaptopToWatchUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = LaptopToWatchUITests;
+			sourceTree = "<group>";
+		};
+		FCDD46322CF01263009C7D6E /* LaptopToWatch Watch App Watch App */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "LaptopToWatch Watch App Watch App";
+			sourceTree = "<group>";
+		};
+		FCDD46432CF01264009C7D6E /* LaptopToWatch Watch App Watch AppTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "LaptopToWatch Watch App Watch AppTests";
+			sourceTree = "<group>";
+		};
+		FCDD464D2CF01264009C7D6E /* LaptopToWatch Watch App Watch AppUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "LaptopToWatch Watch App Watch AppUITests";
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		FCDD45FD2CF011C9009C7D6E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FCDD460D2CF011CB009C7D6E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FCDD46172CF011CB009C7D6E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FCDD462E2CF01263009C7D6E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FCDD463D2CF01264009C7D6E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FCDD46472CF01264009C7D6E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		FCDD45F72CF011C9009C7D6E = {
+			isa = PBXGroup;
+			children = (
+				FCDD46022CF011C9009C7D6E /* LaptopToWatch */,
+				FCDD46132CF011CB009C7D6E /* LaptopToWatchTests */,
+				FCDD461D2CF011CB009C7D6E /* LaptopToWatchUITests */,
+				FCDD46322CF01263009C7D6E /* LaptopToWatch Watch App Watch App */,
+				FCDD46432CF01264009C7D6E /* LaptopToWatch Watch App Watch AppTests */,
+				FCDD464D2CF01264009C7D6E /* LaptopToWatch Watch App Watch AppUITests */,
+				FCDD46012CF011C9009C7D6E /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		FCDD46012CF011C9009C7D6E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				FCDD46002CF011C9009C7D6E /* LaptopToWatch.app */,
+				FCDD46102CF011CB009C7D6E /* LaptopToWatchTests.xctest */,
+				FCDD461A2CF011CB009C7D6E /* LaptopToWatchUITests.xctest */,
+				FCDD46312CF01263009C7D6E /* LaptopToWatch Watch App Watch App.app */,
+				FCDD46402CF01264009C7D6E /* LaptopToWatch Watch App Watch AppTests.xctest */,
+				FCDD464A2CF01264009C7D6E /* LaptopToWatch Watch App Watch AppUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		FCDD45FF2CF011C9009C7D6E /* LaptopToWatch */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FCDD46242CF011CB009C7D6E /* Build configuration list for PBXNativeTarget "LaptopToWatch" */;
+			buildPhases = (
+				FCDD45FC2CF011C9009C7D6E /* Sources */,
+				FCDD45FD2CF011C9009C7D6E /* Frameworks */,
+				FCDD45FE2CF011C9009C7D6E /* Resources */,
+				FCDD46582CF01264009C7D6E /* Embed Watch Content */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				FCDD46532CF01264009C7D6E /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				FCDD46022CF011C9009C7D6E /* LaptopToWatch */,
+			);
+			name = LaptopToWatch;
+			packageProductDependencies = (
+			);
+			productName = LaptopToWatch;
+			productReference = FCDD46002CF011C9009C7D6E /* LaptopToWatch.app */;
+			productType = "com.apple.product-type.application";
+		};
+		FCDD460F2CF011CB009C7D6E /* LaptopToWatchTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FCDD46272CF011CB009C7D6E /* Build configuration list for PBXNativeTarget "LaptopToWatchTests" */;
+			buildPhases = (
+				FCDD460C2CF011CB009C7D6E /* Sources */,
+				FCDD460D2CF011CB009C7D6E /* Frameworks */,
+				FCDD460E2CF011CB009C7D6E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				FCDD46122CF011CB009C7D6E /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				FCDD46132CF011CB009C7D6E /* LaptopToWatchTests */,
+			);
+			name = LaptopToWatchTests;
+			packageProductDependencies = (
+			);
+			productName = LaptopToWatchTests;
+			productReference = FCDD46102CF011CB009C7D6E /* LaptopToWatchTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		FCDD46192CF011CB009C7D6E /* LaptopToWatchUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FCDD462A2CF011CB009C7D6E /* Build configuration list for PBXNativeTarget "LaptopToWatchUITests" */;
+			buildPhases = (
+				FCDD46162CF011CB009C7D6E /* Sources */,
+				FCDD46172CF011CB009C7D6E /* Frameworks */,
+				FCDD46182CF011CB009C7D6E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				FCDD461C2CF011CB009C7D6E /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				FCDD461D2CF011CB009C7D6E /* LaptopToWatchUITests */,
+			);
+			name = LaptopToWatchUITests;
+			packageProductDependencies = (
+			);
+			productName = LaptopToWatchUITests;
+			productReference = FCDD461A2CF011CB009C7D6E /* LaptopToWatchUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+		FCDD46302CF01263009C7D6E /* LaptopToWatch Watch App Watch App */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FCDD46552CF01264009C7D6E /* Build configuration list for PBXNativeTarget "LaptopToWatch Watch App Watch App" */;
+			buildPhases = (
+				FCDD462D2CF01263009C7D6E /* Sources */,
+				FCDD462E2CF01263009C7D6E /* Frameworks */,
+				FCDD462F2CF01263009C7D6E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				FCDD46322CF01263009C7D6E /* LaptopToWatch Watch App Watch App */,
+			);
+			name = "LaptopToWatch Watch App Watch App";
+			packageProductDependencies = (
+			);
+			productName = "LaptopToWatch Watch App Watch App";
+			productReference = FCDD46312CF01263009C7D6E /* LaptopToWatch Watch App Watch App.app */;
+			productType = "com.apple.product-type.application";
+		};
+		FCDD463F2CF01264009C7D6E /* LaptopToWatch Watch App Watch AppTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FCDD46592CF01264009C7D6E /* Build configuration list for PBXNativeTarget "LaptopToWatch Watch App Watch AppTests" */;
+			buildPhases = (
+				FCDD463C2CF01264009C7D6E /* Sources */,
+				FCDD463D2CF01264009C7D6E /* Frameworks */,
+				FCDD463E2CF01264009C7D6E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				FCDD46422CF01264009C7D6E /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				FCDD46432CF01264009C7D6E /* LaptopToWatch Watch App Watch AppTests */,
+			);
+			name = "LaptopToWatch Watch App Watch AppTests";
+			packageProductDependencies = (
+			);
+			productName = "LaptopToWatch Watch App Watch AppTests";
+			productReference = FCDD46402CF01264009C7D6E /* LaptopToWatch Watch App Watch AppTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		FCDD46492CF01264009C7D6E /* LaptopToWatch Watch App Watch AppUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FCDD465C2CF01264009C7D6E /* Build configuration list for PBXNativeTarget "LaptopToWatch Watch App Watch AppUITests" */;
+			buildPhases = (
+				FCDD46462CF01264009C7D6E /* Sources */,
+				FCDD46472CF01264009C7D6E /* Frameworks */,
+				FCDD46482CF01264009C7D6E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				FCDD464C2CF01264009C7D6E /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				FCDD464D2CF01264009C7D6E /* LaptopToWatch Watch App Watch AppUITests */,
+			);
+			name = "LaptopToWatch Watch App Watch AppUITests";
+			packageProductDependencies = (
+			);
+			productName = "LaptopToWatch Watch App Watch AppUITests";
+			productReference = FCDD464A2CF01264009C7D6E /* LaptopToWatch Watch App Watch AppUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		FCDD45F82CF011C9009C7D6E /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1610;
+				LastUpgradeCheck = 1610;
+				TargetAttributes = {
+					FCDD45FF2CF011C9009C7D6E = {
+						CreatedOnToolsVersion = 16.1;
+					};
+					FCDD460F2CF011CB009C7D6E = {
+						CreatedOnToolsVersion = 16.1;
+						TestTargetID = FCDD45FF2CF011C9009C7D6E;
+					};
+					FCDD46192CF011CB009C7D6E = {
+						CreatedOnToolsVersion = 16.1;
+						TestTargetID = FCDD45FF2CF011C9009C7D6E;
+					};
+					FCDD46302CF01263009C7D6E = {
+						CreatedOnToolsVersion = 16.1;
+					};
+					FCDD463F2CF01264009C7D6E = {
+						CreatedOnToolsVersion = 16.1;
+						TestTargetID = FCDD46302CF01263009C7D6E;
+					};
+					FCDD46492CF01264009C7D6E = {
+						CreatedOnToolsVersion = 16.1;
+						TestTargetID = FCDD46302CF01263009C7D6E;
+					};
+				};
+			};
+			buildConfigurationList = FCDD45FB2CF011C9009C7D6E /* Build configuration list for PBXProject "LaptopToWatch" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = FCDD45F72CF011C9009C7D6E;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = FCDD46012CF011C9009C7D6E /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				FCDD45FF2CF011C9009C7D6E /* LaptopToWatch */,
+				FCDD460F2CF011CB009C7D6E /* LaptopToWatchTests */,
+				FCDD46192CF011CB009C7D6E /* LaptopToWatchUITests */,
+				FCDD46302CF01263009C7D6E /* LaptopToWatch Watch App Watch App */,
+				FCDD463F2CF01264009C7D6E /* LaptopToWatch Watch App Watch AppTests */,
+				FCDD46492CF01264009C7D6E /* LaptopToWatch Watch App Watch AppUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		FCDD45FE2CF011C9009C7D6E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FCDD460E2CF011CB009C7D6E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FCDD46182CF011CB009C7D6E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FCDD462F2CF01263009C7D6E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FCDD463E2CF01264009C7D6E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FCDD46482CF01264009C7D6E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		FCDD45FC2CF011C9009C7D6E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FCDD460C2CF011CB009C7D6E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FCDD46162CF011CB009C7D6E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FCDD462D2CF01263009C7D6E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FCDD463C2CF01264009C7D6E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FCDD46462CF01264009C7D6E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		FCDD46122CF011CB009C7D6E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = FCDD45FF2CF011C9009C7D6E /* LaptopToWatch */;
+			targetProxy = FCDD46112CF011CB009C7D6E /* PBXContainerItemProxy */;
+		};
+		FCDD461C2CF011CB009C7D6E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = FCDD45FF2CF011C9009C7D6E /* LaptopToWatch */;
+			targetProxy = FCDD461B2CF011CB009C7D6E /* PBXContainerItemProxy */;
+		};
+		FCDD46422CF01264009C7D6E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = FCDD46302CF01263009C7D6E /* LaptopToWatch Watch App Watch App */;
+			targetProxy = FCDD46412CF01264009C7D6E /* PBXContainerItemProxy */;
+		};
+		FCDD464C2CF01264009C7D6E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = FCDD46302CF01263009C7D6E /* LaptopToWatch Watch App Watch App */;
+			targetProxy = FCDD464B2CF01264009C7D6E /* PBXContainerItemProxy */;
+		};
+		FCDD46532CF01264009C7D6E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = FCDD46302CF01263009C7D6E /* LaptopToWatch Watch App Watch App */;
+			targetProxy = FCDD46522CF01264009C7D6E /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		FCDD46222CF011CB009C7D6E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.1;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		FCDD46232CF011CB009C7D6E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.1;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		FCDD46252CF011CB009C7D6E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"LaptopToWatch/Preview Content\"";
+				DEVELOPMENT_TEAM = 7MY272KL8H;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.yitengjiang.LaptopToWatch;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		FCDD46262CF011CB009C7D6E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"LaptopToWatch/Preview Content\"";
+				DEVELOPMENT_TEAM = 7MY272KL8H;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.yitengjiang.LaptopToWatch;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		FCDD46282CF011CB009C7D6E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 7MY272KL8H;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.1;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.yitengjiang.LaptopToWatchTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/LaptopToWatch.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/LaptopToWatch";
+			};
+			name = Debug;
+		};
+		FCDD46292CF011CB009C7D6E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 7MY272KL8H;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.1;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.yitengjiang.LaptopToWatchTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/LaptopToWatch.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/LaptopToWatch";
+			};
+			name = Release;
+		};
+		FCDD462B2CF011CB009C7D6E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 7MY272KL8H;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.yitengjiang.LaptopToWatchUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = LaptopToWatch;
+			};
+			name = Debug;
+		};
+		FCDD462C2CF011CB009C7D6E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 7MY272KL8H;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.yitengjiang.LaptopToWatchUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = LaptopToWatch;
+			};
+			name = Release;
+		};
+		FCDD46562CF01264009C7D6E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"LaptopToWatch Watch App Watch App/Preview Content\"";
+				DEVELOPMENT_TEAM = 7MY272KL8H;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "LaptopToWatch Watch App";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.yitengjiang.LaptopToWatch;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.yitengjiang.LaptopToWatch.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 11.1;
+			};
+			name = Debug;
+		};
+		FCDD46572CF01264009C7D6E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"LaptopToWatch Watch App Watch App/Preview Content\"";
+				DEVELOPMENT_TEAM = 7MY272KL8H;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "LaptopToWatch Watch App";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.yitengjiang.LaptopToWatch;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.yitengjiang.LaptopToWatch.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 11.1;
+			};
+			name = Release;
+		};
+		FCDD465A2CF01264009C7D6E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 7MY272KL8H;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.yitengjiang.LaptopToWatch-Watch-App-Watch-AppTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/LaptopToWatch Watch App Watch App.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/LaptopToWatch Watch App Watch App";
+				WATCHOS_DEPLOYMENT_TARGET = 11.1;
+			};
+			name = Debug;
+		};
+		FCDD465B2CF01264009C7D6E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 7MY272KL8H;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.yitengjiang.LaptopToWatch-Watch-App-Watch-AppTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/LaptopToWatch Watch App Watch App.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/LaptopToWatch Watch App Watch App";
+				WATCHOS_DEPLOYMENT_TARGET = 11.1;
+			};
+			name = Release;
+		};
+		FCDD465D2CF01264009C7D6E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 7MY272KL8H;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.yitengjiang.LaptopToWatch-Watch-App-Watch-AppUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				TEST_TARGET_NAME = "LaptopToWatch Watch App Watch App";
+				WATCHOS_DEPLOYMENT_TARGET = 11.1;
+			};
+			name = Debug;
+		};
+		FCDD465E2CF01264009C7D6E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 7MY272KL8H;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.yitengjiang.LaptopToWatch-Watch-App-Watch-AppUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				TEST_TARGET_NAME = "LaptopToWatch Watch App Watch App";
+				WATCHOS_DEPLOYMENT_TARGET = 11.1;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		FCDD45FB2CF011C9009C7D6E /* Build configuration list for PBXProject "LaptopToWatch" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FCDD46222CF011CB009C7D6E /* Debug */,
+				FCDD46232CF011CB009C7D6E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FCDD46242CF011CB009C7D6E /* Build configuration list for PBXNativeTarget "LaptopToWatch" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FCDD46252CF011CB009C7D6E /* Debug */,
+				FCDD46262CF011CB009C7D6E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FCDD46272CF011CB009C7D6E /* Build configuration list for PBXNativeTarget "LaptopToWatchTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FCDD46282CF011CB009C7D6E /* Debug */,
+				FCDD46292CF011CB009C7D6E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FCDD462A2CF011CB009C7D6E /* Build configuration list for PBXNativeTarget "LaptopToWatchUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FCDD462B2CF011CB009C7D6E /* Debug */,
+				FCDD462C2CF011CB009C7D6E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FCDD46552CF01264009C7D6E /* Build configuration list for PBXNativeTarget "LaptopToWatch Watch App Watch App" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FCDD46562CF01264009C7D6E /* Debug */,
+				FCDD46572CF01264009C7D6E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FCDD46592CF01264009C7D6E /* Build configuration list for PBXNativeTarget "LaptopToWatch Watch App Watch AppTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FCDD465A2CF01264009C7D6E /* Debug */,
+				FCDD465B2CF01264009C7D6E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FCDD465C2CF01264009C7D6E /* Build configuration list for PBXNativeTarget "LaptopToWatch Watch App Watch AppUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FCDD465D2CF01264009C7D6E /* Debug */,
+				FCDD465E2CF01264009C7D6E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = FCDD45F82CF011C9009C7D6E /* Project object */;
+}
