@@ -113,7 +113,11 @@ while True:
             nose[2]* + manual_forward_vector[2] * 10
         ])
 
-        print(f"Forward Vector: {manual_forward_vector}")
+        theta = math.degrees(math.atan2(manual_forward_vector[0], manual_forward_vector[2]))         # Angle in radians
+        if theta < 0:
+            theta += 360
+        print(f"Forward Vector: {manual_forward_vector} + theta = {theta}" )
+
 
         # Draw the manual forward vector
         p1_manual = (int(nose[0]), int(nose[1]))
