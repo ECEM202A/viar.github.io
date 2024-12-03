@@ -24,6 +24,11 @@ min_distance = 0.01
 max_distance = 8
 drawline = 1
 pose,ML = 1,2
+
+alpha = 0.4 # exponential moving average smoothing factor
+smoothed_head_angle = 0
+smoothed_angle_object = 0
+
 x,y = 0,0
 prevObject3Dpoint = [0,0,0]
 dpObject3Dpoint = 0,0,0
@@ -331,6 +336,11 @@ try:
                 if angle_object < 0:
                     angle_object += 360
 
+                # Exponential moving average smoothing for both angle values
+                smoothed_head_angle = alpha * head_angle + (1 - alpha) * smoothed_head_angle
+                smoothed_angle_object = alpha * angle_object + (1 - alpha) * smoothed_angle_object
+
+
 
         if(x_wrist!=0 and y_wrist!=0 and x_wrist<=640 and y_wrist<=480):
             depth_x = x_wrist
@@ -378,7 +388,7 @@ try:
                 #print("Hand 3D deprojected Point = " + str(dpHand3Dpoint))
 
                 
-        print(f"Head Angle: {head_angle}", f"Head-object Angle: {angle_object}")
+        print(f"Head Angle: {smoothed_head_angle}", f"Head-object Angle: {smoothed_angle_object}")
         
         if depth_colormap_dim != color_colormap_dim or 1:
             resized_color_image = cv2.resize(annotated_image, dsize=(depth_colormap_dim[1], depth_colormap_dim[0]), interpolation=cv2.INTER_AREA)
