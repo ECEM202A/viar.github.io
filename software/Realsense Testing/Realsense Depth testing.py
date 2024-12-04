@@ -190,10 +190,10 @@ try:
             height, width = color_image.shape[:2]
             expected = 300
             aspect = width / height
-            resized_image = cv2.resize(color_image, (round(expected * aspect), expected)) #resize image to 300x300 for ML model
+            resized_image = cv2.resize(color_image, dsize = (300,300), interpolation=cv2.INTER_AREA)# (round(expected * aspect), expected)) #resize image to 300x300 for ML model
             #resized_depthmap = cv2.resize(depth_image, (round(expected * aspect), expected))
-            crop_start = round(expected * (aspect - 1) / 2)
-            crop_img = resized_image[0:expected, crop_start:crop_start+expected]
+            #crop_start = round(expected * (aspect - 1) / 2)
+            crop_img = resized_image#[0:expected, crop_start:crop_start+expected]
             #depth_image = resized_depthmap[0:expected, crop_start:crop_start+expected]
             if( ML == 1): #set ML to 1 for classifier bounding box from mobilenetSSD
                 net = cv2.dnn.readNetFromCaffe("C:/Users/User/Source/Repos/viar.github.io/software/MobileNetSSD_deploy.prototxt", "C:/Users/User/Source/Repos/viar.github.io/software/MobileNetSSD_deploy.caffemodel")
@@ -261,19 +261,23 @@ try:
         #hand position data
         #hand_position = {160,120}
         if(pose == 1):
-           [annotated_image,x_wrist,y_wrist,x_nose,y_nose,forward_vector,head_angle] = draw_pose(crop_img,poseObject)
+           [annotated_image,x_wrist,y_wrist,x_nose_original,y_nose_original,forward_vector,head_angle] = draw_pose(crop_img,poseObject)
+           
            previousHandDepth = get_depth(annotated_image,depth_image,x_wrist,y_wrist)
-           previousNoseDepth = get_depth(annotated_image,depth_image,x_nose,y_nose)
+           previousNoseDepth = get_depth(annotated_image,depth_image,x_nose_original,y_nose_original)
 
            x_wrist = int(x_wrist/300*640)
            y_wrist =int(y_wrist/300*480)
 
-           x_nose = int(x_nose/300*640)
-           y_nose =int(y_nose/300*480)
+           x_nose = int(x_nose_original/300*640.0)
+           y_nose =int(y_nose_original/300*480.0)
 
            annotated_image = cv2.resize(annotated_image, dsize = (640,480), interpolation=cv2.INTER_AREA)
 
            angle_object = 361
+
+
+           cv2.circle(annotated_image, (x_nose, y_nose), 2, (0, 0, 255), -1)
 
 
            #cv2.putText(
@@ -293,6 +297,9 @@ try:
         if(x_nose!=0 and y_nose!=0 and x_nose<=640 and y_nose<=480):
             depth_x = x_nose
             depth_y = y_nose
+
+            #print(depth_x, depth_y)
+
             cv2.circle(depth_colormap, (depth_x, depth_y), 10, (0, 255, 0), -1)  # Draw a green circle for the nose
 
             nose_position = [x_nose, y_nose]
@@ -301,7 +308,7 @@ try:
             nosedepth = get_depth(annotated_image, depth_image, x_nose, y_nose)
             #print("current nosedepth at " + str(x) + ", " + str(y) + " = " + str(nosedepth) )
 
-            if(x_nose<480 and y_nose < 640 and (nosedepth > 0 )):
+            if(x_nose<=640 and y_nose <= 480):# and (nosedepth > 0 )):
                 previousNoseDepth = nosedepth
                 nose3Dpoint = [x_nose, y_nose, nosedepth]
                 nosedepth = "{:.2f}".format(nosedepth)
@@ -340,7 +347,16 @@ try:
                 smoothed_head_angle = alpha * head_angle + (1 - alpha) * smoothed_head_angle
                 smoothed_angle_object = alpha * angle_object + (1 - alpha) * smoothed_angle_object
 
+                if abs(smoothed_head_angle - smoothed_angle_object) < 20:
+                    print("Forward")
+                elif smoothed_head_angle < smoothed_angle_object - 20:
+                    print("Right")
+                elif smoothed_head_angle > smoothed_angle_object + 20:
+                    print("Left")
+                else:
+                    print("??")
 
+                #print(f"deprojected x {nose3Dpoint[0]}", f"x_nose: {x_nose}")
 
         if(x_wrist!=0 and y_wrist!=0 and x_wrist<=640 and y_wrist<=480):
             depth_x = x_wrist
@@ -358,7 +374,7 @@ try:
             #print("current handdepth at " + str(x) + ", " + str(y) + " = " + str(handdepth) )
 
 
-            if(x_wrist<480 and y_wrist < 640 and (handdepth > 0 )):
+            if(x_wrist<640 and y_wrist < 480 and (handdepth > 0 )):
                 previousHandDepth = handdepth
                 hand3Dpoint = [x_wrist,y_wrist,handdepth]
                 handdepth = "{:.2f}".format(handdepth)
@@ -388,18 +404,15 @@ try:
                 #print("Hand 3D deprojected Point = " + str(dpHand3Dpoint))
 
                 
-        print(f"Head Angle: {smoothed_head_angle}", f"Head-object Angle: {smoothed_angle_object}")
+        #print(f"Head Angle: {smoothed_head_angle}", f"Head-object Angle: {smoothed_angle_object}")
         
-        if depth_colormap_dim != color_colormap_dim or 1:
+        if depth_colormap_dim != annotated_image.shape:
             resized_color_image = cv2.resize(annotated_image, dsize=(depth_colormap_dim[1], depth_colormap_dim[0]), interpolation=cv2.INTER_AREA)
             images = np.hstack((resized_color_image, depth_colormap))
         else:
             images = np.hstack((annotated_image, depth_colormap))
 
-        
-
-
-
+    
        
 
        #images = cv2.resize(images, (1280,720))

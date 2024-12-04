@@ -142,9 +142,9 @@ def draw_pose(frame,pose):
           cx_wrist, cy_wrist = int(landmark_wrist.x * w), int(landmark_wrist.y * h)  # Convert to pixel coordinates
           landmark_nose = pose_results.pose_landmarks.landmark[0]  # Nose (Landmark 0)
           cx_nose, cy_nose = int(landmark_nose.x * w), int(landmark_nose.y * h)  # Convert to pixel coordinates
-          cv2.circle(frame, (cx_wrist, cy_wrist), 10, (0, 255, 0), -1)  # Draw a green circle for the right wrist
-          cv2.circle(frame, (cx_nose, cy_nose), 10, (255, 0, 0), -1)  # Draw a red circle for the nose
-                
+          cv2.circle(frame, (cx_wrist, cy_wrist), 2, (0, 255, 0), -1)  # Draw a green circle for the right wrist
+          #cv2.circle(frame, (cx_nose, cy_nose), 2, (255, 0, 0), -1)  # Draw a blue circle for the nose
+            
           return [frame,cx_wrist,cy_wrist,cx_nose,cy_nose,manual_forward_vector,theta]
         #  mp_drawing.draw_landmarks(frame, pose_results.pose_landmarks.landmark[16], mp_pose.POSE_CONNECTIONS)
     return frame,0,0,0,0,0,361
