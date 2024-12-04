@@ -9,6 +9,7 @@ import UIKit
 import Speech
 import Foundation
 import AVKit
+import Network
 
 public class ViewController: UIViewController, SFSpeechRecognizerDelegate {
     // MARK: Properties
@@ -32,6 +33,9 @@ public class ViewController: UIViewController, SFSpeechRecognizerDelegate {
     
     @IBOutlet var recordButton: UIButton!
     
+    // Create a UDP connection to the laptop
+    var connection: NWConnection?
+    
     // MARK: Custom LM Support
 
     @available(iOS 17, *)
@@ -49,6 +53,13 @@ public class ViewController: UIViewController, SFSpeechRecognizerDelegate {
         self.setupAudio()
         // Disable the record buttons until authorization has been granted.
         recordButton.isEnabled = false
+        // Replace with your laptop's IP address and port
+        let laptopIPAddress = "192.168.1.82" // Replace with your laptop's IP
+        let port: UInt16 = 5000              // Replace with the desired port
+
+        // Initialize the UDP connection
+        connection = NWConnection(host: NWEndpoint.Host(laptopIPAddress), port: NWEndpoint.Port(integerLiteral: port), using: .udp)
+        connection?.start(queue: .global())
     }
     
     override public func viewDidAppear(_ animated: Bool) {
@@ -137,6 +148,7 @@ public class ViewController: UIViewController, SFSpeechRecognizerDelegate {
                 let recognized_text = result.bestTranscription.formattedString
                 if recognized_text.contains("keys") {
                     self.textView.text = "keys keyword found"
+                    self.sendMessage()
                     self.playAudio()
                 } else {
                     self.textView.text = "No keyword found"
@@ -252,5 +264,18 @@ public class ViewController: UIViewController, SFSpeechRecognizerDelegate {
             player?.stop()
             soundPlaying = false
             }
+func sendMessage() {
+        // Message to send
+        let message = "Hello from iPhone!"
+        if let messageData = message.data(using: .utf8) {
+            connection?.send(content: messageData, completion: .contentProcessed({ error in
+                if let error = error {
+                    print("Failed to send message: \(error)")
+                } else {
+                    print("Message sent successfully!")
+                }
+            }))
+        }
+    }
 }
 
