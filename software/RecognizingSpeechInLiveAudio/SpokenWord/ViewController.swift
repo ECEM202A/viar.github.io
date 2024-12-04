@@ -46,7 +46,7 @@ public class ViewController: UIViewController, SFSpeechRecognizerDelegate {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
-        
+        self.setupAudio()
         // Disable the record buttons until authorization has been granted.
         recordButton.isEnabled = false
     }
@@ -137,8 +137,10 @@ public class ViewController: UIViewController, SFSpeechRecognizerDelegate {
                 let recognized_text = result.bestTranscription.formattedString
                 if recognized_text.contains("keys") {
                     self.textView.text = "keys keyword found"
+                    self.playAudio()
                 } else {
                     self.textView.text = "No keyword found"
+                    self.stopAudio()
                 }
 //                self.textView.text = result.bestTranscription.formattedString
                 
@@ -213,42 +215,42 @@ public class ViewController: UIViewController, SFSpeechRecognizerDelegate {
     }
     
     public func setupAudio() {
-            guard let url = Bundle.main.url(forResource: audioFile, withExtension: "mp3") else { return }
-        let audiofile = try! AVAudioFile(forReading: url)
-//        let playernode = AVAudioPlayerNode()
-//        audioEngine.attach(playernode)
-//        audioEngine.connect(playernode,
-//                            to: audioEngine.outputNode,
-//                            format: audiofile.processingFormat)
-//        playernode.scheduleFile(audiofile,
-//                                at: nil,
-//                                completionCallbackType: .dataPlayedBack) { _ in
-//            /* Handle any work that's necessary after playback. */
-//        }
-//        do {
-//            try audioEngine.start()
-//            playernode.play()
-//        } catch {
-//            /* Handle the error. */
-//        }
-            do {
-                print("trying audio")
-                player = try AVAudioPlayer(contentsOf: url)
-                player?.prepareToPlay()
-               totalTime = player?.duration ?? 0.0
-                playAudio()
-            } catch {
-                print("Error loading audio: \(error)")
+                guard let url = Bundle.main.url(forResource: audioFile, withExtension: "mp3") else { return }
+            let audiofile = try! AVAudioFile(forReading: url)
+    //        let playernode = AVAudioPlayerNode()
+    //        audioEngine.attach(playernode)
+    //        audioEngine.connect(playernode,
+    //                            to: audioEngine.outputNode,
+    //                            format: audiofile.processingFormat)
+    //        playernode.scheduleFile(audiofile,
+    //                                at: nil,
+    //                                completionCallbackType: .dataPlayedBack) { _ in
+    //            /* Handle any work that's necessary after playback. */
+    //        }
+    //        do {
+    //            try audioEngine.start()
+    //            playernode.play()
+    //        } catch {
+    //            /* Handle the error. */
+    //        }
+                do {
+                    print("trying audio")
+                    player = try AVAudioPlayer(contentsOf: url)
+                    player?.prepareToPlay()
+                   totalTime = player?.duration ?? 0.0
+//                    playAudio()
+                } catch {
+                    print("Error loading audio: \(error)")
+                }
             }
-        }
-    
-    public func playAudio() {
-        player?.play()
-        soundPlaying = true
-        }
-    public func stopAudio() {
-        player?.stop()
-        soundPlaying = false
-        }
+        
+        public func playAudio() {
+            player?.play()
+            soundPlaying = true
+            }
+        public func stopAudio() {
+            player?.stop()
+            soundPlaying = false
+            }
 }
 
