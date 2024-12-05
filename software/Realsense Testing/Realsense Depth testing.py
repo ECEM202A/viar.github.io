@@ -13,18 +13,23 @@ import numpy as np
 import cv2
 import torch
 from PIL import Image
+
 import sys
-sys.path.append('C:/Users/alexh/OneDrive/Desktop/UCLA Q1/ECE M202A/Project/VIAR/software')
+sys.path.append('C:/Users/User/Source/Repos/viar.github.io/software')
 print(sys.path)
 from Pose.pose_landmark_pnp import *  # Now this works
 className = "No Object"
+UDP_IP = "131.179.20.99" 
+UDP_PORT = 53
+sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
 object3Dpoint = [0,0,0]
 objectdepth = 0
 min_distance = 0.01
 max_distance = 8
 drawline = 1
 pose,ML = 1,2
-
+Direction = "Wait";
 alpha = 0.4 # exponential moving average smoothing factor
 smoothed_head_angle = 0
 smoothed_angle_object = 0
@@ -33,7 +38,7 @@ x,y = 0,0
 prevObject3Dpoint = [0,0,0]
 dpObject3Dpoint = 0,0,0
 poseObject = init_pose(300,300)
-model = torch.hub.load("yolov7", 'custom', 'yolov7.pt', source='local', force_reload=True) if ML == 2 else 0
+model = torch.hub.load("software/yolov7", 'custom', 'software/yolov7.pt', source='local', force_reload=True) if ML == 2 else 0
 className =  ('person', 'bicycle', 'car', 'motorcycle', 'airplane', 'bus', 'train', 'truck', 'boat', 'traffic light',
          'fire hydrant', 'stop sign', 'parking meter', 'bench', 'bird', 'cat', 'dog', 'horse', 'sheep', 'cow',
          'elephant', 'bear', 'zebra', 'giraffe', 'backpack', 'umbrella', 'handbag', 'tie', 'suitcase', 'frisbee',
@@ -109,10 +114,10 @@ depth_sensor = pipeline_profile.get_device().first_depth_sensor()
 depth_scale = depth_sensor.get_depth_scale()
 
 #UDP setup
-sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-server_address = ('localhost', 10000)
-sock.bind(server_address)
-sock.setblocking(False)
+#sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+#server_address = ('localhost', 10000)
+#sock.bind(server_address)
+#sock.setblocking(False)
 
 
 
@@ -141,8 +146,11 @@ try:
         # Receive data from the client
         try:
             # Attempt to receive data
-            data, address = sock.recvfrom(4096)
-            print(f"Received {len(data)} bytes from {address}: {data.decode('utf-8')}")
+            
+            MESSAGE = f"{Direction}"
+            sock.sendto(MESSAGE.encode(), (UDP_IP, UDP_PORT))
+            print(f"Sent: {MESSAGE} to {UDP_IP}:{UDP_PORT}")
+            #print(f"Received {len(data)} bytes from {address}: {data.decode('utf-8')}")
         except BlockingIOError:
         # Handle cases where no data is available
             #print("No data available, continuing...")
@@ -348,10 +356,14 @@ try:
                 smoothed_angle_object = alpha * angle_object + (1 - alpha) * smoothed_angle_object
 
                 if abs(smoothed_head_angle - smoothed_angle_object) < 20:
+                    Direction = "Forward"
                     print("Forward")
                 elif smoothed_head_angle < smoothed_angle_object - 20:
+                    Direction = "Right"
+
                     print("Right")
                 elif smoothed_head_angle > smoothed_angle_object + 20:
+                    Direction = "Left"
                     print("Left")
                 else:
                     print("??")
@@ -396,7 +408,7 @@ try:
                             lineType=cv2.LINE_AA
 
                     )
-                
+                dpHand3Dpoint - dpObject3Dpoint
                 #print(className + "  Object 3D point = " + str(object3Dpoint))
                 #print("Object 3D deprojected Point = " + str(dpObject3Dpoint))
 
