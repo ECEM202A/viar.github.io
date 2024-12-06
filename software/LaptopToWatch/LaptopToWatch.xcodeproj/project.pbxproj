@@ -71,9 +71,25 @@
 		FCDD464A2CF01264009C7D6E /* LaptopToWatch Watch App Watch AppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "LaptopToWatch Watch App Watch AppUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		FCCC252C2D027A42006DDE29 /* Exceptions for "LaptopToWatch" folder in "LaptopToWatch Watch App Watch App" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Forward.m4a,
+				Left.m4a,
+				Right.m4a,
+				Wait.m4a,
+			);
+			target = FCDD46302CF01263009C7D6E /* LaptopToWatch Watch App Watch App */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		FCDD46022CF011C9009C7D6E /* LaptopToWatch */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				FCCC252C2D027A42006DDE29 /* Exceptions for "LaptopToWatch" folder in "LaptopToWatch Watch App Watch App" target */,
+			);
 			path = LaptopToWatch;
 			sourceTree = "<group>";
 		};
