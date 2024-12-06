@@ -15,7 +15,7 @@ import torch
 from PIL import Image
 
 import sys
-sys.path.append('C:/Users/User/Source/Repos/viar.github.io/software')
+sys.path.append('C:/Users/alexh/OneDrive/Desktop/UCLA Q1/ECE M202A/Project/VIAR/software')
 print(sys.path)
 from Pose.pose_landmark_pnp import *  # Now this works
 className = "No Object"
@@ -29,16 +29,19 @@ min_distance = 0.01
 max_distance = 8
 drawline = 1
 pose,ML = 1,2
-Direction = "Wait";
+Direction = "Wait"
 alpha = 0.4 # exponential moving average smoothing factor
 smoothed_head_angle = 0
 smoothed_angle_object = 0
+
+baseline_set = False
+
 
 x,y = 0,0
 prevObject3Dpoint = [0,0,0]
 dpObject3Dpoint = 0,0,0
 poseObject = init_pose(300,300)
-model = torch.hub.load("software/yolov7", 'custom', 'software/yolov7.pt', source='local', force_reload=True) if ML == 2 else 0
+model = torch.hub.load("yolov7", 'custom', 'yolov7.pt', source='local', force_reload=True) if ML == 2 else 0
 className =  ('person', 'bicycle', 'car', 'motorcycle', 'airplane', 'bus', 'train', 'truck', 'boat', 'traffic light',
          'fire hydrant', 'stop sign', 'parking meter', 'bench', 'bird', 'cat', 'dog', 'horse', 'sheep', 'cow',
          'elephant', 'bear', 'zebra', 'giraffe', 'backpack', 'umbrella', 'handbag', 'tie', 'suitcase', 'frisbee',
@@ -95,6 +98,26 @@ def findObject(frame,depth_frame,objectName):
             #print(str(object3Dpoint))
 
             return crop_img,object3Dpoint
+
+
+def compute_hand_object_magnitude(x_wrist, y_wrist, handdepth, object3Dpoint, depth_scale):
+
+    handdepth = float(handdepth)
+    handdepth /= depth_scale
+
+    # Normalize z to match x,y scale
+    normalized_z = float(object3Dpoint[2]) / depth_scale
+
+    # Compute the hand-to-object vector
+    hand_to_object_vector = np.array([
+        object3Dpoint[0] - x_wrist, 
+        object3Dpoint[1] - y_wrist,  
+        normalized_z - handdepth     
+    ])
+
+    # Compute the magnitude euclidian distance
+    magnitude = np.linalg.norm(hand_to_object_vector)
+    return magnitude
                
 
 #Configure pose detection
@@ -149,7 +172,7 @@ try:
             
             MESSAGE = f"{Direction}"
             sock.sendto(MESSAGE.encode(), (UDP_IP, UDP_PORT))
-            print(f"Sent: {MESSAGE} to {UDP_IP}:{UDP_PORT}")
+            #print(f"Sent: {MESSAGE} to {UDP_IP}:{UDP_PORT}")
             #print(f"Received {len(data)} bytes from {address}: {data.decode('utf-8')}")
         except BlockingIOError:
         # Handle cases where no data is available
@@ -245,6 +268,8 @@ try:
                dpObject3Dpoint= rs.rs2_deproject_pixel_to_point(intrinsics, (prevObject3Dpoint[0],prevObject3Dpoint[1]), float(prevObject3Dpoint[2]))
                dpObject3Dpoint = tuple(round(value, 2) for value in dpObject3Dpoint)
 
+               baseline_set = False
+
                crop_img = cv2.cvtColor(crop_img, cv2.COLOR_RGB2BGR)
             else:#use previous object point to draw circle
                 cv2.circle(crop_img, (object3Dpoint[0], object3Dpoint[1]), 10, (0, 255, 0), -1)  # Draw a green circle for the right wrist
@@ -260,11 +285,7 @@ try:
 
                     )
 
-                 
-
-
-
-
+                
         #pose detection
         #hand position data
         #hand_position = {160,120}
@@ -355,18 +376,18 @@ try:
                 smoothed_head_angle = alpha * head_angle + (1 - alpha) * smoothed_head_angle
                 smoothed_angle_object = alpha * angle_object + (1 - alpha) * smoothed_angle_object
 
-                if abs(smoothed_head_angle - smoothed_angle_object) < 20:
-                    Direction = "Forward"
-                    print("Forward")
-                elif smoothed_head_angle < smoothed_angle_object - 20:
-                    Direction = "Right"
+                """                 if abs(smoothed_head_angle - smoothed_angle_object) < 20:
+                                    Direction = "Forward"
+                                    print("Forward")
+                                elif smoothed_head_angle < smoothed_angle_object - 20:
+                                    Direction = "Right"
 
-                    print("Right")
-                elif smoothed_head_angle > smoothed_angle_object + 20:
-                    Direction = "Left"
-                    print("Left")
-                else:
-                    print("??")
+                                    print("Right")
+                                elif smoothed_head_angle > smoothed_angle_object + 20:
+                                    Direction = "Left"
+                                    print("Left")
+                                else:
+                                    print("??") """
 
                 #print(f"deprojected x {nose3Dpoint[0]}", f"x_nose: {x_nose}")
 
@@ -382,8 +403,9 @@ try:
 
             
             #print("previous handdepth = " + str(previousHandDepth))
-            handdepth =get_depth(annotated_image,depth_image,x_wrist,y_wrist)
+            handdepth = get_depth(annotated_image,depth_image,x_wrist,y_wrist)
             #print("current handdepth at " + str(x) + ", " + str(y) + " = " + str(handdepth) )
+
 
 
             if(x_wrist<640 and y_wrist < 480 and (handdepth > 0 )):
@@ -398,6 +420,18 @@ try:
                 #print(str(hand_position) + "," + handdepth)
                 dpHand3Dpoint= rs.rs2_deproject_pixel_to_point(intrinsics, (hand3Dpoint[0],hand3Dpoint[1]), float(hand3Dpoint[2]))
                 dpHand3Dpoint = tuple(round(value, 2) for value in dpHand3Dpoint)
+
+                if baseline_set is False:
+                    baseline_hand_object_mag = compute_hand_object_magnitude(x_wrist, y_wrist, handdepth, object3Dpoint, depth_scale)
+                    baseline_set = True
+
+                hand_object_mag = compute_hand_object_magnitude(x_wrist, y_wrist, handdepth, object3Dpoint, depth_scale)
+
+                #percent_change = (1/(hand_object_mag / baseline_hand_object_mag)) * 100
+
+                test = 1 + (hand_object_mag - 1) * (100 - 1) / (1.25*baseline_hand_object_mag - 1)
+            
+                print(f"Mapping: {test}", f"Original: {hand_object_mag}", f"Baseline{baseline_hand_object_mag}")
 
                 cv2.putText(
                             annotated_image, str(dpHand3Dpoint[0]) + "," + str(dpHand3Dpoint[1]) + "," + str(dpHand3Dpoint[2]) + "meters", (x_wrist, y_wrist), 
@@ -414,6 +448,25 @@ try:
 
                 #print("Hand 3D point = " + str(hand3Dpoint))
                 #print("Hand 3D deprojected Point = " + str(dpHand3Dpoint))
+
+
+                """                 x_wrist = float(x_wrist)  # Convert to float if necessary
+                                y_wrist = float(y_wrist)  # Convert to float if necessary
+                                handdepth = float(handdepth)  # Convert depth to float
+
+                                # Normalize x, y coordinates using depth to align scales
+                                real_world_hand_3D = np.array([
+                                    (x_wrist - intrinsics.ppx) * handdepth / intrinsics.fx,  # Convert x from pixels to meters
+                                    (y_wrist - intrinsics.ppy) * handdepth / intrinsics.fy,  # Convert y from pixels to meters
+                                    handdepth  # z (depth) remains the same
+                                ])
+
+                                real_world_object_3D = np.array([
+                                    (object3Dpoint[0] - intrinsics.ppx) * float(object3Dpoint[2]) / intrinsics.fx,  # Convert x from pixels to meters
+                                    (object3Dpoint[1] - intrinsics.ppy) * float(object3Dpoint[2]) / intrinsics.fy,  # Convert y from pixels to meters
+                                    float(object3Dpoint[2])  # z (depth) remains the same
+                                ]) """
+                
 
                 
         #print(f"Head Angle: {smoothed_head_angle}", f"Head-object Angle: {smoothed_angle_object}")
