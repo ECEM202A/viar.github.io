@@ -19,10 +19,12 @@ sys.path.append('C:/Users/User/Source/Repos/viar.github.io/software')
 print(sys.path)
 from Pose.pose_landmark_pnp import *  # Now this works
 className = "No Object"
-UDP_IP = "131.179.20.99" 
-UDP_PORT = 53
+UDP_SendIP = "131.179.20.99"
+UDP_ReceiveIP = "131.179.76.20" 
+UDP_SENDPort = 52
+UDP_ReceivePORT = 53
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-
+handDistance = 0;
 object3Dpoint = [0,0,0]
 objectdepth = 0
 min_distance = 0.01
@@ -33,8 +35,9 @@ Direction = "Wait";
 alpha = 0.4 # exponential moving average smoothing factor
 smoothed_head_angle = 0
 smoothed_angle_object = 0
-
+data = ""
 x,y = 0,0
+keyword = 0
 prevObject3Dpoint = [0,0,0]
 dpObject3Dpoint = 0,0,0
 poseObject = init_pose(300,300)
@@ -113,11 +116,11 @@ device_product_line = str(device.get_info(rs.camera_info.product_line))
 depth_sensor = pipeline_profile.get_device().first_depth_sensor()
 depth_scale = depth_sensor.get_depth_scale()
 
-#UDP setup
 #sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 #server_address = ('localhost', 10000)
 #sock.bind(server_address)
-#sock.setblocking(False)
+sock.bind((UDP_ReceiveIP, UDP_ReceivePORT))
+sock.setblocking(False)
 
 
 
@@ -148,9 +151,19 @@ try:
             # Attempt to receive data
             
             MESSAGE = f"{Direction}"
-            sock.sendto(MESSAGE.encode(), (UDP_IP, UDP_PORT))
-            print(f"Sent: {MESSAGE} to {UDP_IP}:{UDP_PORT}")
-            #print(f"Received {len(data)} bytes from {address}: {data.decode('utf-8')}")
+            sock.sendto(MESSAGE.encode(), (UDP_SendIP, UDP_SENDPort))
+            #print(f"Sent: {MESSAGE} to {UDP_SendIP}:{UDP_SENDPort}")
+            MESSAGE = f"{handDistance}"
+          #  sock.sendto(MESSAGE.encode(), (UDP_SendIP, UDP_SENDPort))
+           # print(f"Sent: {MESSAGE} to {UDP_SendIP}:{UDP_SENDPort}")
+
+            data,address = sock.recvfrom(4096)
+            if(data != ""):
+                keyword = 1
+
+            print(f"Received {len(data)} bytes from {address}: {data.decode('utf-8')}")
+
+
         except BlockingIOError:
         # Handle cases where no data is available
             #print("No data available, continuing...")
@@ -238,8 +251,10 @@ try:
      
                     #cv2.putText(crop_img,str(objectmidpoint) + str(objectdepth) + "meters",objectmidpoint,cv2.FONT_HERSHEY_COMPLEX,0.5,(255,255,255))
                     object3Dpoint = [objectmidpoint[0],objectmidpoint[1], objectdepth]
-            if(ML == 2) and keyboard.is_pressed('a') :#reset object position
-               crop_img,object3Dpoint =  findObject(crop_img,depth_image,"bottle")
+            if(ML == 2) and keyword == 1 :#reset object position
+               print(data.decode('utf-8'))
+               crop_img,object3Dpoint =  findObject(crop_img,depth_image,data.decode('utf-8'))
+               keyword = 0
                #cv2.putText(crop_img, className,(int(xmin * expected), int(ymin * expected) - 5),cv2.FONT_HERSHEY_COMPLEX, 0.5, (255,255,255))
                prevObject3Dpoint = int(object3Dpoint[0]*640/300),int(object3Dpoint[1]*480/300), object3Dpoint[2] #prevObject3D takes 3D point and converts to color frame pixels
                dpObject3Dpoint= rs.rs2_deproject_pixel_to_point(intrinsics, (prevObject3Dpoint[0],prevObject3Dpoint[1]), float(prevObject3Dpoint[2]))
