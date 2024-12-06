@@ -82,12 +82,20 @@
 			);
 			target = FCDD46302CF01263009C7D6E /* LaptopToWatch Watch App Watch App */;
 		};
+		FCCC254E2D02FE5B006DDE29 /* Exceptions for "LaptopToWatch" folder in "LaptopToWatch" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = FCDD45FF2CF011C9009C7D6E /* LaptopToWatch */;
+		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		FCDD46022CF011C9009C7D6E /* LaptopToWatch */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
+				FCCC254E2D02FE5B006DDE29 /* Exceptions for "LaptopToWatch" folder in "LaptopToWatch" target */,
 				FCCC252C2D027A42006DDE29 /* Exceptions for "LaptopToWatch" folder in "LaptopToWatch Watch App Watch App" target */,
 			);
 			path = LaptopToWatch;
@@ -640,6 +648,8 @@
 				DEVELOPMENT_TEAM = 7MY272KL8H;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "";
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -669,6 +679,8 @@
 				DEVELOPMENT_TEAM = 7MY272KL8H;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "";
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
