@@ -13,7 +13,7 @@ import Network
 
 public class ViewController: UIViewController, SFSpeechRecognizerDelegate {
     // MARK: Properties
-    private var audioFile = "test_song"
+    private var audioFile = "Forward"
         
     private var player: AVAudioPlayer?
     private var isplaying = false
@@ -54,7 +54,7 @@ public class ViewController: UIViewController, SFSpeechRecognizerDelegate {
         // Disable the record buttons until authorization has been granted.
         recordButton.isEnabled = false
         // Replace with your laptop's IP address and port
-        let laptopIPAddress = "192.168.1.82" // Replace with your laptop's IP
+        let laptopIPAddress = "169.232.214.100" // Replace with your laptop's IP
         let port: UInt16 = 5000              // Replace with the desired port
 
         // Initialize the UDP connection
@@ -112,7 +112,6 @@ public class ViewController: UIViewController, SFSpeechRecognizerDelegate {
     }
     
     private func startRecording() throws {
-        
         // Cancel the previous task if it's running.
         if let recognitionTask = recognitionTask {
             recognitionTask.cancel()
@@ -146,9 +145,10 @@ public class ViewController: UIViewController, SFSpeechRecognizerDelegate {
             if let result = result {
                 // Update the text view with the results.
                 let recognized_text = result.bestTranscription.formattedString
-                if recognized_text.contains("keys") {
-                    self.textView.text = "keys keyword found"
+                if recognized_text.contains("bottle") {
+                    self.textView.text = "bottle keyword found"
                     self.sendMessage()
+                    // TODO: Add code here for receiving direction
                     self.playAudio()
                 } else {
                     self.textView.text = "No keyword found"
@@ -208,7 +208,6 @@ public class ViewController: UIViewController, SFSpeechRecognizerDelegate {
     }
     
     @IBAction func recordButtonTapped() {
-        
         if audioEngine.isRunning {
             audioEngine.stop()
             recognitionRequest?.endAudio()
@@ -227,24 +226,8 @@ public class ViewController: UIViewController, SFSpeechRecognizerDelegate {
     }
     
     public func setupAudio() {
-                guard let url = Bundle.main.url(forResource: audioFile, withExtension: "mp3") else { return }
+                guard let url = Bundle.main.url(forResource: audioFile, withExtension: "m4a") else { return }
             let audiofile = try! AVAudioFile(forReading: url)
-    //        let playernode = AVAudioPlayerNode()
-    //        audioEngine.attach(playernode)
-    //        audioEngine.connect(playernode,
-    //                            to: audioEngine.outputNode,
-    //                            format: audiofile.processingFormat)
-    //        playernode.scheduleFile(audiofile,
-    //                                at: nil,
-    //                                completionCallbackType: .dataPlayedBack) { _ in
-    //            /* Handle any work that's necessary after playback. */
-    //        }
-    //        do {
-    //            try audioEngine.start()
-    //            playernode.play()
-    //        } catch {
-    //            /* Handle the error. */
-    //        }
                 do {
                     print("trying audio")
                     player = try AVAudioPlayer(contentsOf: url)
@@ -266,7 +249,7 @@ public class ViewController: UIViewController, SFSpeechRecognizerDelegate {
             }
 func sendMessage() {
         // Message to send
-        let message = "Hello from iPhone!"
+        let message = "bottle"
         if let messageData = message.data(using: .utf8) {
             connection?.send(content: messageData, completion: .contentProcessed({ error in
                 if let error = error {
