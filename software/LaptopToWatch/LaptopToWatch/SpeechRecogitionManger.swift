@@ -14,7 +14,7 @@ class SpeechRecognitionManager: NSObject, ObservableObject, SFSpeechRecognizerDe
     
     // UDP connection properties
     private var connection: NWConnection?
-    private let host = "192.168.1.202" // Replace with your laptop's IP
+    private let host = "131.179.73.228" // Replace with your laptop's IP
     private let port: UInt16 = 5005    // Replace with the desired port
     
     override init() {
@@ -87,7 +87,7 @@ class SpeechRecognitionManager: NSObject, ObservableObject, SFSpeechRecognizerDe
         recognitionRequest = SFSpeechAudioBufferRecognitionRequest()
         guard let recognitionRequest = recognitionRequest else { return }
         recognitionRequest.shouldReportPartialResults = true
-        recognitionRequest.requiresOnDeviceRecognition = true  // Enable on-device recognition if needed
+        recognitionRequest.requiresOnDeviceRecognition = true // Enable on-device recognition if needed
         
         let inputNode = audioEngine.inputNode
         let recordingFormat = inputNode.outputFormat(forBus: 0)
@@ -108,12 +108,13 @@ class SpeechRecognitionManager: NSObject, ObservableObject, SFSpeechRecognizerDe
                 DispatchQueue.main.async {
                     self.recognizedText = result.bestTranscription.formattedString
                 }
+                
                 // Check for specific keywords and send them via UDP
                 let recognizedText = result.bestTranscription.formattedString.lowercased()
                 if recognizedText.contains("bottle") {
                     self.sendMessage("bottle")
-                } else if recognizedText.contains("anotherKeyword") {
-                    self.sendMessage("anotherKeyword")
+                } else if recognizedText.contains("laptop") {
+                    self.sendMessage("laptop")
                 }
             }
             
@@ -129,6 +130,15 @@ class SpeechRecognitionManager: NSObject, ObservableObject, SFSpeechRecognizerDe
         audioEngine.inputNode.removeTap(onBus: 0)
         recognitionRequest?.endAudio()
         isRecording = false
+        
+        // Reset the audio session to allow playback after stopping recording
+        let audioSession = AVAudioSession.sharedInstance()
+        do {
+            try audioSession.setCategory(.playback, mode: .default)
+            try audioSession.setActive(true)
+        } catch {
+            print("Error resetting audio session: \(error.localizedDescription)")
+        }
     }
     
     private func sendMessage(_ message: String) {

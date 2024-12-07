@@ -4,7 +4,7 @@ struct ContentView: View {
     @StateObject private var viewModel = WatchViewModel()
 
     var body: some View {
-        ScrollView { // Add a ScrollView
+        ScrollView {
             VStack(spacing: 20) {
                 Text("Data from iPhone:")
                     .font(.headline)

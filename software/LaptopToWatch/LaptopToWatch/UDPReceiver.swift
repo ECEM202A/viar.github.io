@@ -2,15 +2,20 @@ import Foundation
 import Network
 import WatchConnectivity
 import AVFoundation
+import CoreHaptics
 
 class UDPReceiver: NSObject, ObservableObject, WCSessionDelegate {
     @Published var recentMessages: [String] = [] // Array to show the last messages
     private var listener: NWListener?
     private var directionVotes: [String: Int] = [:] // Tracks votes for directions
     private var audioPlayer: AVAudioPlayer?
+    private var hapticEngine: CHHapticEngine?
+    private var lastReceivedDirection: String? // To store the last received direction
+    private var lastReceivedMagnitude: Float? // To store the last received magnitude
 
     override init() {
         super.init()
+        setupHaptics()
         if WCSession.isSupported() {
             WCSession.default.delegate = self
             WCSession.default.activate()
@@ -20,7 +25,7 @@ class UDPReceiver: NSObject, ObservableObject, WCSessionDelegate {
         }
 
         // Timer to process the majority direction every 3 seconds
-        Timer.scheduledTimer(withTimeInterval: 3.0, repeats: true) { _ in
+        Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { _ in
             self.processMajorityDirection()
         }
     }
@@ -60,18 +65,13 @@ class UDPReceiver: NSObject, ObservableObject, WCSessionDelegate {
 
             if let data = data, let message = String(data: data, encoding: .utf8) {
                 DispatchQueue.main.async {
-                    // Add new message to recent messages
                     self.recentMessages.append(message)
                     if self.recentMessages.count > 10 {
                         self.recentMessages.removeFirst() // Keep only the last 10 messages
                     }
 
-                    // Update voting system
-                    self.directionVotes[message, default: 0] += 1
-
-                    // Log message
                     print("Received from Laptop: \(message)")
-                    self.sendToAppleWatch(data: message) // Forward to Apple Watch
+                    self.handleMessage(message)
                 }
             }
 
@@ -81,22 +81,32 @@ class UDPReceiver: NSObject, ObservableObject, WCSessionDelegate {
         }
     }
 
+    private func handleMessage(_ message: String) {
+        if let floatMagnitude = Float(message) {
+            self.lastReceivedMagnitude = floatMagnitude
+            self.adjustHaptics(magnitude: floatMagnitude)
+
+            // Send magnitude to Apple Watch
+            sendToAppleWatch(data: message)
+        } else {
+            self.lastReceivedDirection = message
+            directionVotes[message, default: 0] += 1
+
+            // Send direction to Apple Watch
+            sendToAppleWatch(data: message)
+        }
+    }
+
     private func processMajorityDirection() {
-        // Find the majority direction
         guard !directionVotes.isEmpty else { return }
         let majorityDirection = directionVotes.max(by: { $0.value < $1.value })?.key ?? "wait"
-
-        // Play the audio for the majority direction
         playDirection(direction: majorityDirection)
-
-        // Clear votes for the next interval
         directionVotes.removeAll()
     }
 
     private func playDirection(direction: String) {
         print("Majority direction: \(direction)")
 
-        // Load the corresponding .mp3 file
         guard let url = Bundle.main.url(forResource: direction, withExtension: "m4a") else {
             print("Audio file for \(direction) not found.")
             return
@@ -110,19 +120,54 @@ class UDPReceiver: NSObject, ObservableObject, WCSessionDelegate {
         }
     }
 
-    func sendToAppleWatch(data: String) {
-        if WCSession.default.isReachable {
-            print("Attempting to send message to Apple Watch...")
-            WCSession.default.sendMessage(["data": data], replyHandler: nil) { error in
-                print("Failed to send to Apple Watch: \(error.localizedDescription)")
-            }
-            print("Message sent to Apple Watch: \(data)")
-        } else {
-            print("Apple Watch is not reachable.")
+    private func adjustHaptics(magnitude: Float) {
+        guard magnitude <= 1.0 else { return }
+
+        let normalizedMagnitude = 1.0 - magnitude
+        let hapticStrength = max(0.0, min(1.0, normalizedMagnitude))
+
+        do {
+            let pattern = try CHHapticPattern(events: [
+                CHHapticEvent(eventType: .hapticContinuous,
+                              parameters: [CHHapticEventParameter(parameterID: .hapticIntensity, value: hapticStrength)],
+                              relativeTime: 0,
+                              duration: 0.2)
+            ], parameters: [])
+
+            let player = try hapticEngine?.makePlayer(with: pattern)
+            try player?.start(atTime: 0)
+            print("Haptic feedback triggered with strength: \(hapticStrength)")
+        } catch {
+            print("Failed to trigger haptic feedback: \(error.localizedDescription)")
         }
     }
 
-    // WCSessionDelegate required methods
+    private func setupHaptics() {
+        guard CHHapticEngine.capabilitiesForHardware().supportsHaptics else {
+            print("Haptics not supported on this device.")
+            return
+        }
+
+        do {
+            hapticEngine = try CHHapticEngine()
+            try hapticEngine?.start()
+        } catch {
+            print("Failed to start haptic engine: \(error.localizedDescription)")
+        }
+    }
+
+    func sendToAppleWatch(data: String) {
+        guard WCSession.default.isReachable else {
+            print("Apple Watch is not reachable.")
+            return
+        }
+
+        WCSession.default.sendMessage(["data": data], replyHandler: nil) { error in
+            print("Failed to send data to Apple Watch: \(error.localizedDescription)")
+        }
+        print("Message sent to Apple Watch: \(data)")
+    }
+
     func sessionDidBecomeInactive(_ session: WCSession) {
         print("WCSession did become inactive.")
     }
