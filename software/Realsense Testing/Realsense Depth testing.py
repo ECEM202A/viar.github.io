@@ -19,10 +19,13 @@ sys.path.append('C:/Users/alexh/OneDrive/Desktop/UCLA Q1/ECE M202A/Project/VIAR/
 print(sys.path)
 from Pose.pose_landmark_pnp import *  # Now this works
 className = "No Object"
-UDP_IP = "131.179.20.99" 
-UDP_PORT = 53
-sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+UDP_SendIP = "131.179.106.212"
+UDP_ReceiveIP = "0.0.0.0" 
+UDP_SENDPort = 53
+UDP_ReceivePORT = 5005
 
+sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+dpNose3Dpoint = [0,0,0]
 object3Dpoint = [0,0,0]
 objectdepth = 0
 min_distance = 0.01
@@ -30,10 +33,11 @@ max_distance = 8
 drawline = 1
 pose,ML = 1,2
 Direction = "Wait"
+wrist_object_distance = 20.0
 alpha = 0.4 # exponential moving average smoothing factor
 smoothed_head_angle = 0
 smoothed_angle_object = 0
-
+request = 0
 baseline_set = False
 
 
@@ -78,6 +82,7 @@ def findObject(frame,depth_frame,objectName):
     #crop_img = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)  # Convert to RGB
     image_pil = Image.fromarray(crop_img)  # Convert to PIL Image
     results = model(image_pil)
+    
     detections = results.xyxy[0]  # Bounding box coordinates, confidence, and class
     for det in detections:
         x1, y1, x2, y2, conf, cls = map(int, det[:6])
@@ -85,8 +90,9 @@ def findObject(frame,depth_frame,objectName):
         x = int((x1 + x2 )/2)
         y = int((y1 +y2) /2)
         if(className[int(cls)] == objectName):
-        # Draw bounding box and label
-            #print(label)
+          # Draw bounding box and label
+           # print(label)
+            request = 0
             drawline = 1
             cv2.circle(crop_img, (x,y), 10, (255, 255, 255), 2)#put circle midpoint of object
             objectmidpoint = x,y
@@ -98,6 +104,7 @@ def findObject(frame,depth_frame,objectName):
             #print(str(object3Dpoint))
 
             return crop_img,object3Dpoint
+        
 
 
 def compute_hand_object_magnitude(x_wrist, y_wrist, handdepth, object3Dpoint, depth_scale):
@@ -137,10 +144,10 @@ depth_sensor = pipeline_profile.get_device().first_depth_sensor()
 depth_scale = depth_sensor.get_depth_scale()
 
 #UDP setup
-#sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-#server_address = ('localhost', 10000)
-#sock.bind(server_address)
-#sock.setblocking(False)
+sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+server_address = (UDP_ReceiveIP, UDP_ReceivePORT)
+sock.bind(server_address)
+sock.setblocking(False)
 
 
 
@@ -169,17 +176,33 @@ try:
         # Receive data from the client
         try:
             # Attempt to receive data
-            
             MESSAGE = f"{Direction}"
-            sock.sendto(MESSAGE.encode(), (UDP_IP, UDP_PORT))
-            #print(f"Sent: {MESSAGE} to {UDP_IP}:{UDP_PORT}")
-            #print(f"Received {len(data)} bytes from {address}: {data.decode('utf-8')}")
+            sock.sendto(MESSAGE.encode(), (UDP_SendIP, UDP_SENDPort))
+            #print("Sent ", MESSAGE)
+
+            MESSAGE = f"{wrist_object_distance}"
+            sock.sendto(MESSAGE.encode(), (UDP_SendIP, UDP_SENDPort))
+
+
+            data,addr = sock.recvfrom(1024)
+
+
+        #print("Sent ", MESSAGE)
+           #  print(f"Sent: {MESSAGE} to {UDP_SendIP}:{UDP_SENDPort}")
+           # data,address = sock.recvfrom(4096)
+           # if(data != ""):
+           #     keyword = 1
+
+            print(f"Received {len(data)} bytes from {addr}: {data.decode('utf-8')}")
+            data = data.decode('utf-8')
+            
+            request = 1
+
         except BlockingIOError:
         # Handle cases where no data is available
             #print("No data available, continuing...")
             if(0):
                 print("no data received")
-
 
         # Send a response back to the client
 
@@ -261,11 +284,13 @@ try:
      
                     #cv2.putText(crop_img,str(objectmidpoint) + str(objectdepth) + "meters",objectmidpoint,cv2.FONT_HERSHEY_COMPLEX,0.5,(255,255,255))
                     object3Dpoint = [objectmidpoint[0],objectmidpoint[1], objectdepth]
-            if(ML == 2) and keyboard.is_pressed('a') :#reset object position
-               crop_img,object3Dpoint =  findObject(crop_img,depth_image,"bottle")
+            if(ML == 2) and request == 1 and keyboard.is_pressed('a') :#reset object position
+               
+               print(data)
+               crop_img,object3Dpoint =  findObject(crop_img,depth_image,data)
                #cv2.putText(crop_img, className,(int(xmin * expected), int(ymin * expected) - 5),cv2.FONT_HERSHEY_COMPLEX, 0.5, (255,255,255))
                prevObject3Dpoint = int(object3Dpoint[0]*640/300),int(object3Dpoint[1]*480/300), object3Dpoint[2] #prevObject3D takes 3D point and converts to color frame pixels
-               dpObject3Dpoint= rs.rs2_deproject_pixel_to_point(intrinsics, (prevObject3Dpoint[0],prevObject3Dpoint[1]), float(prevObject3Dpoint[2]))
+               dpObject3Dpoint = rs.rs2_deproject_pixel_to_point(intrinsics, (prevObject3Dpoint[0], prevObject3Dpoint[1]), float(get_depth(annotated_image, depth_image, prevObject3Dpoint[0], prevObject3Dpoint[1])))
                dpObject3Dpoint = tuple(round(value, 2) for value in dpObject3Dpoint)
 
                baseline_set = False
@@ -290,7 +315,7 @@ try:
         #hand position data
         #hand_position = {160,120}
         if(pose == 1):
-           [annotated_image,x_wrist,y_wrist,x_nose_original,y_nose_original,forward_vector,head_angle] = draw_pose(crop_img,poseObject)
+           [annotated_image,x_wrist,y_wrist,x_nose_original,y_nose_original,x_leye,y_leye,x_reye,y_reye,forward_vector,head_angle] = draw_pose(crop_img,poseObject)
            
            previousHandDepth = get_depth(annotated_image,depth_image,x_wrist,y_wrist)
            previousNoseDepth = get_depth(annotated_image,depth_image,x_nose_original,y_nose_original)
@@ -301,12 +326,19 @@ try:
            x_nose = int(x_nose_original/300*640.0)
            y_nose =int(y_nose_original/300*480.0)
 
+           x_mid_eye = (x_leye+x_reye)/2
+           y_mid_eye = (y_leye+y_reye)/2
+
+           x_mid_eye = int(x_mid_eye/300*640.0)
+           y_mid_eye =int(y_mid_eye/300*480.0)
+
+
            annotated_image = cv2.resize(annotated_image, dsize = (640,480), interpolation=cv2.INTER_AREA)
 
            angle_object = 361
 
 
-           cv2.circle(annotated_image, (x_nose, y_nose), 2, (0, 0, 255), -1)
+           cv2.circle(annotated_image, (x_mid_eye, y_mid_eye), 2, (0, 0, 255), -1)
 
 
            #cv2.putText(
@@ -323,23 +355,23 @@ try:
             annotated_image = crop_img
 
 
-        if(x_nose!=0 and y_nose!=0 and x_nose<=640 and y_nose<=480):
-            depth_x = x_nose
-            depth_y = y_nose
+        if(x_mid_eye!=0 and y_mid_eye!=0 and x_mid_eye<=640 and y_mid_eye<=480):
+            depth_x = x_mid_eye
+            depth_y = y_mid_eye
 
             #print(depth_x, depth_y)
 
             cv2.circle(depth_colormap, (depth_x, depth_y), 10, (0, 255, 0), -1)  # Draw a green circle for the nose
 
-            nose_position = [x_nose, y_nose]
+            nose_position = [x_mid_eye, y_mid_eye]
 
             #print("previous nosedepth = " + str(previousNoseDepth))
-            nosedepth = get_depth(annotated_image, depth_image, x_nose, y_nose)
+            nosedepth = get_depth(annotated_image, depth_image, x_mid_eye, y_mid_eye)
             #print("current nosedepth at " + str(x) + ", " + str(y) + " = " + str(nosedepth) )
 
-            if(x_nose<=640 and y_nose <= 480):# and (nosedepth > 0 )):
+            if(x_mid_eye<=640 and y_mid_eye <= 480):# and (nosedepth > 0 )):
                 previousNoseDepth = nosedepth
-                nose3Dpoint = [x_nose, y_nose, nosedepth]
+                nose3Dpoint = [x_mid_eye, y_mid_eye, nosedepth]
                 nosedepth = "{:.2f}".format(nosedepth)
                 if(drawline == 1):
                 # drawline = 0
@@ -347,11 +379,14 @@ try:
                     annotated_image = cv2.line(annotated_image, (nose3Dpoint[0], nose3Dpoint[1]), (prevObject3Dpoint[0], prevObject3Dpoint[1]), (255,0,0))
 
                 #print(str(nose_position) + "," + nosedepth)
-                dpNose3Dpoint = rs.rs2_deproject_pixel_to_point(intrinsics, (nose3Dpoint[0], nose3Dpoint[1]), float(nose3Dpoint[2]))
-                dpNose3Dpoint = tuple(round(value, 2) for value in dpNose3Dpoint)
+
+                if nose3Dpoint[2] != 0:
+                    dpNose3Dpoint = rs.rs2_deproject_pixel_to_point(intrinsics, (nose3Dpoint[0], nose3Dpoint[1]), float(nose3Dpoint[2]))
+                    dpNose3Dpoint = tuple(round(value, 2) for value in dpNose3Dpoint)
+                
 
                 cv2.putText(
-                            annotated_image, str(dpNose3Dpoint[0]) + "," + str(dpNose3Dpoint[1]) + "," + str(dpNose3Dpoint[2]) + "meters", (x_nose, y_nose), 
+                            annotated_image, str(dpNose3Dpoint[0]) + "," + str(dpNose3Dpoint[1]) + "," + str(dpNose3Dpoint[2]) + "meters", (x_mid_eye, y_mid_eye), 
                             fontFace=cv2.FONT_HERSHEY_SIMPLEX, 
                             fontScale=0.4, 
                             color=(255, 0, 0), 
@@ -376,22 +411,18 @@ try:
                 smoothed_head_angle = alpha * head_angle + (1 - alpha) * smoothed_head_angle
                 smoothed_angle_object = alpha * angle_object + (1 - alpha) * smoothed_angle_object
 
-                """                 if abs(smoothed_head_angle - smoothed_angle_object) < 20:
-                                    Direction = "Forward"
-                                    print("Forward")
-                                elif smoothed_head_angle < smoothed_angle_object - 20:
-                                    Direction = "Right"
-
-                                    print("Right")
-                                elif smoothed_head_angle > smoothed_angle_object + 20:
-                                    Direction = "Left"
-                                    print("Left")
-                                else:
-                                    print("??") """
+                if abs(smoothed_head_angle - smoothed_angle_object) < 30:
+                    Direction = "Forward"
+                elif smoothed_head_angle < smoothed_angle_object - 30:
+                    Direction = "Right"
+                elif smoothed_head_angle > smoothed_angle_object + 30:
+                    Direction = "Left"
+                else:
+                    Direction = "Wait"
 
                 #print(f"deprojected x {nose3Dpoint[0]}", f"x_nose: {x_nose}")
 
-        if(x_wrist!=0 and y_wrist!=0 and x_wrist<=640 and y_wrist<=480):
+        if(x_wrist!=0 and y_wrist!=0 and x_wrist<=640 and y_wrist<=480 and prevObject3Dpoint[0] != 0 and dpObject3Dpoint[0] != 0):
             depth_x = x_wrist
             depth_y = y_wrist
             #print(" pose = " + str(x) + ", " + str(y) + " depth = " + str(depth_x) + "," + str(depth_y) )
@@ -421,17 +452,57 @@ try:
                 dpHand3Dpoint= rs.rs2_deproject_pixel_to_point(intrinsics, (hand3Dpoint[0],hand3Dpoint[1]), float(hand3Dpoint[2]))
                 dpHand3Dpoint = tuple(round(value, 2) for value in dpHand3Dpoint)
 
-                if baseline_set is False:
-                    baseline_hand_object_mag = compute_hand_object_magnitude(x_wrist, y_wrist, handdepth, object3Dpoint, depth_scale)
-                    baseline_set = True
+                # Deproject wrist coordinates to 3D space
+                dpWrist3Dpoint = rs.rs2_deproject_pixel_to_point(intrinsics, (x_wrist, y_wrist), float(get_depth(annotated_image, depth_image, x_wrist, y_wrist)))
+                                
+                # Calculate the differences in x, y, z
+                x_diff = dpObject3Dpoint[0] - dpWrist3Dpoint[0]
+                y_diff = dpObject3Dpoint[1] - dpWrist3Dpoint[1]
+                z_diff = dpObject3Dpoint[2] - dpWrist3Dpoint[2]
+                
+                # Calculate the Euclidean distance
+                wrist_object_distance = np.linalg.norm([x_diff, y_diff, z_diff])
 
-                hand_object_mag = compute_hand_object_magnitude(x_wrist, y_wrist, handdepth, object3Dpoint, depth_scale)
+                #print(f"X diff: {x_diff:.2f} m, Y diff: {y_diff:.2f} m, Z diff: {z_diff:.2f} m, Distance: {wrist_object_distance:.2f} m")
 
-                #percent_change = (1/(hand_object_mag / baseline_hand_object_mag)) * 100
 
-                test = 1 + (hand_object_mag - 1) * (100 - 1) / (1.25*baseline_hand_object_mag - 1)
-            
-                print(f"Mapping: {test}", f"Original: {hand_object_mag}", f"Baseline{baseline_hand_object_mag}")
+                # Add text overlay for direction and distance
+                display_text = f"Direction: {Direction} Distance: {wrist_object_distance:.2f} m"
+                cv2.putText(
+                    annotated_image, 
+                    f"Direction: {Direction}",
+                    (10, 30), # Top left
+                    fontFace=cv2.FONT_HERSHEY_SIMPLEX, 
+                    fontScale=0.6,
+                    color=(255, 0, 0),
+                    thickness=2, 
+                    lineType=cv2.LINE_AA 
+                )
+
+                cv2.putText(
+                    annotated_image, 
+                    f"Distance: {wrist_object_distance:.2f} m",
+                    (10, 60), # Top left
+                    fontFace=cv2.FONT_HERSHEY_SIMPLEX, 
+                    fontScale=0.6,
+                    color=(255, 0, 0),
+                    thickness=2, 
+                    lineType=cv2.LINE_AA 
+                )
+
+
+
+                """                 if baseline_set is False:
+                                    baseline_hand_object_mag = compute_hand_object_magnitude(x_wrist, y_wrist, handdepth, object3Dpoint, depth_scale)
+                                    baseline_set = True
+
+                                hand_object_mag = compute_hand_object_magnitude(x_wrist, y_wrist, handdepth, object3Dpoint, depth_scale)
+
+                                #percent_change = (1/(hand_object_mag / baseline_hand_object_mag)) * 100
+
+                                test = 1 + (hand_object_mag - 1) * (100 - 1) / (1.25*baseline_hand_object_mag - 1)
+                            
+                                print(f"Mapping: {test}", f"Original: {hand_object_mag}", f"Baseline{baseline_hand_object_mag}") """
 
                 cv2.putText(
                             annotated_image, str(dpHand3Dpoint[0]) + "," + str(dpHand3Dpoint[1]) + "," + str(dpHand3Dpoint[2]) + "meters", (x_wrist, y_wrist), 
@@ -442,7 +513,7 @@ try:
                             lineType=cv2.LINE_AA
 
                     )
-                dpHand3Dpoint - dpObject3Dpoint
+                #dpHand3Dpoint - dpObject3Dpoint
                 #print(className + "  Object 3D point = " + str(object3Dpoint))
                 #print("Object 3D deprojected Point = " + str(dpObject3Dpoint))
 
