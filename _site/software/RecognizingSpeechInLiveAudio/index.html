@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Recognizing speech in live audio | viar.github.io</title>
+<meta name="generator" content="Jekyll v3.9.3" />
+<meta property="og:title" content="Recognizing speech in live audio" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Visually Impaired Accessible Room" />
+<meta property="og:description" content="Visually Impaired Accessible Room" />
+<meta property="og:site_name" content="viar.github.io" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Recognizing speech in live audio" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Visually Impaired Accessible Room","headline":"Recognizing speech in live audio","url":"/software/RecognizingSpeechInLiveAudio/"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/assets/css/style.css?v=362de996cb0cfcff14396c775f98d56bdf483776">
+    <!-- start custom head snippets, customize with your own _includes/head-custom.html file -->
+
+<!-- Setup Google Analytics -->
+
+
+
+<!-- You can set your favicon here -->
+<!-- link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" -->
+
+<!-- end custom head snippets -->
+
+  </head>
+  <body>
+    <div class="container-lg px-3 my-5 markdown-body">
+      
+      <h1><a href="/">viar.github.io</a></h1>
+      
+
+      <h1 id="recognizing-speech-in-live-audio">Recognizing speech in live audio</h1>
+
+<p>Perform speech recognition on audio coming from the microphone of an iOS device.</p>
+
+<h2 id="overview">Overview</h2>
+
+<p>This sample project demonstrates how to use the Speech framework to recognize words from captured audio. When the user taps the Start Recording button, the SpokenWord app begins capturing audio from the device’s microphone. It routes that audio to the APIs of the Speech framework, which process the audio and send back any recognized text. The app displays the recognized text in its text view, continuously updating that text until you tap the Stop Recording button. The sample app doesn’t run in Simulator, so you need to run it on a physical device with iOS 17 or later, or iPadOS 17 or later.</p>
+
+<p><img src="/software/RecognizingSpeechInLiveAudio/Documentation/sample-screens_2x.png" alt="On the left, the app lets the user know that it is ready to begin speech recognition. On the right, the app uses speech recognition to display what the user said." /></p>
+
+<ul>
+  <li>Important: Apps need to include the <code class="language-plaintext highlighter-rouge">NSSpeechRecognitionUsageDescription</code> key in their <code class="language-plaintext highlighter-rouge">Info.plist</code> file and request authorization to perform speech recognition. For information about requesting authorization, see <a href="https://developer.apple.com/documentation/speech/asking_permission_to_use_speech_recognition">Asking Permission to Use Speech Recognition</a>.</li>
+</ul>
+
+<h2 id="customize-the-language-model">Customize the language model</h2>
+
+<p>Developers can enhance the <code class="language-plaintext highlighter-rouge">SFSpeechRecognizer</code> for specific use cases and applications by customizing its language model. The SpokenWord app uses language model customization to improve accuracy when recognizing certain chess moves. The high-level steps in this process are:</p>
+
+<ul>
+  <li>Training data generation</li>
+  <li>Training data preparation</li>
+  <li>Request configuration</li>
+</ul>
+
+<p>This sample code project includes a command-line utility named <code class="language-plaintext highlighter-rouge">datagenerator</code> that produces a training data file. The project includes a sample output file in the SpokenWord app bundle at <code class="language-plaintext highlighter-rouge">customlm/en_US/CustomLMData.bin</code>. The <code class="language-plaintext highlighter-rouge">datagenerator</code> utility uses classes that the Speech framework defines to generate data, starting with the <a href="https://developer.apple.com/documentation/speech/sfcustomlanguagemodeldata">SFCustomLanguageModelData</a>, which the <code class="language-plaintext highlighter-rouge">ResultBuilder</code> DSL builds.</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">data</span> <span class="o">=</span> <span class="kt">SFCustomLanguageModelData</span><span class="p">(</span><span class="nv">locale</span><span class="p">:</span> <span class="kt">Locale</span><span class="p">(</span><span class="nv">identifier</span><span class="p">:</span> <span class="s">"en_US"</span><span class="p">),</span> <span class="nv">identifier</span><span class="p">:</span> <span class="s">"com.apple.SpokenWord"</span><span class="p">,</span> <span class="nv">version</span><span class="p">:</span> <span class="s">"1.0"</span><span class="p">)</span> <span class="p">{</span>
+</code></pre></div></div>
+
+<p>Training data samples can include exact phrases that the app is likely to encounter.</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">SFCustomLanguageModelData</span><span class="o">.</span><span class="kt">PhraseCount</span><span class="p">(</span><span class="nv">phrase</span><span class="p">:</span> <span class="s">"Play the Albin counter gambit"</span><span class="p">,</span> <span class="nv">count</span><span class="p">:</span> <span class="mi">10</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>The app can also define phrases using templates, which expand automatically to generate large amounts of data.</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">SFCustomLanguageModelData</span><span class="o">.</span><span class="kt">PhraseCountsFromTemplates</span><span class="p">(</span><span class="nv">classes</span><span class="p">:</span> <span class="p">[</span>
+    <span class="s">"piece"</span><span class="p">:</span> <span class="p">[</span><span class="s">"pawn"</span><span class="p">,</span> <span class="s">"rook"</span><span class="p">,</span> <span class="s">"knight"</span><span class="p">,</span> <span class="s">"bishop"</span><span class="p">,</span> <span class="s">"queen"</span><span class="p">,</span> <span class="s">"king"</span><span class="p">],</span>
+    <span class="s">"royal"</span><span class="p">:</span> <span class="p">[</span><span class="s">"queen"</span><span class="p">,</span> <span class="s">"king"</span><span class="p">],</span>
+    <span class="s">"rank"</span><span class="p">:</span> <span class="kt">Array</span><span class="p">(</span><span class="mi">1</span><span class="o">...</span><span class="mi">8</span><span class="p">)</span><span class="o">.</span><span class="nf">map</span><span class="p">({</span> <span class="kt">String</span><span class="p">(</span><span class="nv">$0</span><span class="p">)</span> <span class="p">})</span>
+<span class="p">])</span> <span class="p">{</span>
+    <span class="kt">SFCustomLanguageModelData</span><span class="o">.</span><span class="kt">TemplatePhraseCountGenerator</span><span class="o">.</span><span class="kt">Template</span><span class="p">(</span>
+        <span class="s">"&lt;piece&gt; to &lt;royal&gt; &lt;piece&gt; &lt;rank&gt;"</span><span class="p">,</span>
+        <span class="nv">count</span><span class="p">:</span> <span class="mi">10_000</span>
+    <span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>An app that uses specialized terminology can also define custom vocabulary, complete with pronunciation information.</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">SFCustomLanguageModelData</span><span class="o">.</span><span class="kt">CustomPronunciation</span><span class="p">(</span><span class="nv">grapheme</span><span class="p">:</span> <span class="s">"Winawer"</span><span class="p">,</span> <span class="nv">phonemes</span><span class="p">:</span> <span class="p">[</span><span class="s">"w I n aU @r"</span><span class="p">])</span>
+<span class="kt">SFCustomLanguageModelData</span><span class="o">.</span><span class="kt">CustomPronunciation</span><span class="p">(</span><span class="nv">grapheme</span><span class="p">:</span> <span class="s">"Tartakower"</span><span class="p">,</span> <span class="nv">phonemes</span><span class="p">:</span> <span class="p">[</span><span class="s">"t A r t @ k aU @r"</span><span class="p">])</span>
+
+<span class="kt">SFCustomLanguageModelData</span><span class="o">.</span><span class="kt">PhraseCount</span><span class="p">(</span><span class="nv">phrase</span><span class="p">:</span> <span class="s">"Play the Winawer variation"</span><span class="p">,</span> <span class="nv">count</span><span class="p">:</span> <span class="mi">10</span><span class="p">)</span>
+<span class="kt">SFCustomLanguageModelData</span><span class="o">.</span><span class="kt">PhraseCount</span><span class="p">(</span><span class="nv">phrase</span><span class="p">:</span> <span class="s">"Play the Tartakower"</span><span class="p">,</span> <span class="nv">count</span><span class="p">:</span> <span class="mi">10</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h2 id="configure-the-microphone-using-avfoundation">Configure the microphone using AVFoundation</h2>
+
+<p>The SpokenWord app uses AVFoundation to communicate with the device’s microphone. Specifically, the app configures the shared <a href="https://developer.apple.com/documentation/avfaudio/avaudiosession">AVAudioSession</a> object to manage the app’s audio interactions with the rest of the system, and it configures an <a href="https://developer.apple.com/documentation/avfaudio/avaudioengine">AVAudioEngine</a> object to retrieve the microphone input.</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">private</span> <span class="k">let</span> <span class="nv">audioEngine</span> <span class="o">=</span> <span class="kt">AVAudioEngine</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p>Tapping the app’s Start Recording button retrieves the shared <a href="https://developer.apple.com/documentation/avfaudio/avaudiosession">AVAudioSession</a> object, configures it for recording, and makes it the active session. Activating the session lets the system know that the app needs the microphone resource. If that resource is unavailable — perhaps because the user is talking on the phone — the <a href="https://developer.apple.com/documentation/avfaudio/avaudiosession/1616627-setactive">setActive(_:options:)</a> method throws an exception.</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Configure the audio session for the app.</span>
+<span class="k">let</span> <span class="nv">audioSession</span> <span class="o">=</span> <span class="kt">AVAudioSession</span><span class="o">.</span><span class="nf">sharedInstance</span><span class="p">()</span>
+<span class="k">try</span> <span class="n">audioSession</span><span class="o">.</span><span class="nf">setCategory</span><span class="p">(</span><span class="o">.</span><span class="n">record</span><span class="p">,</span> <span class="nv">mode</span><span class="p">:</span> <span class="o">.</span><span class="n">measurement</span><span class="p">,</span> <span class="nv">options</span><span class="p">:</span> <span class="o">.</span><span class="n">duckOthers</span><span class="p">)</span>
+<span class="k">try</span> <span class="n">audioSession</span><span class="o">.</span><span class="nf">setActive</span><span class="p">(</span><span class="kc">true</span><span class="p">,</span> <span class="nv">options</span><span class="p">:</span> <span class="o">.</span><span class="n">notifyOthersOnDeactivation</span><span class="p">)</span>
+<span class="k">let</span> <span class="nv">inputNode</span> <span class="o">=</span> <span class="n">audioEngine</span><span class="o">.</span><span class="n">inputNode</span>
+</code></pre></div></div>
+
+<p>When the session is active, the app retrieves the <a href="https://developer.apple.com/documentation/avfaudio/avaudioinputnode">AVAudioInputNode</a> object from its audio engine and stores it in the local <code class="language-plaintext highlighter-rouge">inputNode</code> variable. The input node represents the current audio input path, which can be the device’s built-in microphone or a microphone connected to a set of headphones.</p>
+
+<p>To begin recording, the app installs a tap on the input node and starts up the audio engine, which begins collecting samples into an internal buffer. When a buffer is full, the audio engine calls the provided block. The app’s implementation of that block passes the samples directly to the request object’s <a href="https://developer.apple.com/documentation/speech/sfspeechaudiobufferrecognitionrequest/1649389-append">append(_:)</a> method, which accumulates the audio samples and delivers them to the speech recognition system.</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Configure the microphone input.</span>
+<span class="k">let</span> <span class="nv">recordingFormat</span> <span class="o">=</span> <span class="n">inputNode</span><span class="o">.</span><span class="nf">outputFormat</span><span class="p">(</span><span class="nv">forBus</span><span class="p">:</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">inputNode</span><span class="o">.</span><span class="nf">installTap</span><span class="p">(</span><span class="nv">onBus</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="nv">bufferSize</span><span class="p">:</span> <span class="mi">1024</span><span class="p">,</span> <span class="nv">format</span><span class="p">:</span> <span class="n">recordingFormat</span><span class="p">)</span> <span class="p">{</span> <span class="p">(</span><span class="nv">buffer</span><span class="p">:</span> <span class="kt">AVAudioPCMBuffer</span><span class="p">,</span> <span class="nv">when</span><span class="p">:</span> <span class="kt">AVAudioTime</span><span class="p">)</span> <span class="k">in</span>
+    <span class="k">self</span><span class="o">.</span><span class="n">recognitionRequest</span><span class="p">?</span><span class="o">.</span><span class="nf">append</span><span class="p">(</span><span class="n">buffer</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="n">audioEngine</span><span class="o">.</span><span class="nf">prepare</span><span class="p">()</span>
+<span class="k">try</span> <span class="n">audioEngine</span><span class="o">.</span><span class="nf">start</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p>The SpokenWord app processes the training data that the <code class="language-plaintext highlighter-rouge">datagenerator</code> utility produces by calling <a href="https://developer.apple.com/speech/sfspeechlanguagemodel/4165618-preparecustomlanguagemodelforurl">prepareCustomLanguageModel(for:clientIdentifier:configuration:)</a>. This method can have a large amount of associated latency, so the system calls it off the main thread.</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">Task</span><span class="o">.</span><span class="n">detached</span> <span class="p">{</span>
+    <span class="k">do</span> <span class="p">{</span>
+        <span class="k">let</span> <span class="nv">assetPath</span> <span class="o">=</span> <span class="kt">Bundle</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="nf">path</span><span class="p">(</span><span class="nv">forResource</span><span class="p">:</span> <span class="s">"CustomLMData"</span><span class="p">,</span> <span class="nv">ofType</span><span class="p">:</span> <span class="s">"bin"</span><span class="p">,</span> <span class="nv">inDirectory</span><span class="p">:</span> <span class="s">"customlm/en_US"</span><span class="p">)</span><span class="o">!</span>
+        <span class="k">let</span> <span class="nv">assetUrl</span> <span class="o">=</span> <span class="kt">URL</span><span class="p">(</span><span class="nv">fileURLWithPath</span><span class="p">:</span> <span class="n">assetPath</span><span class="p">)</span>
+        <span class="k">try</span> <span class="n">await</span> <span class="kt">SFSpeechLanguageModel</span><span class="o">.</span><span class="nf">prepareCustomLanguageModel</span><span class="p">(</span><span class="nv">for</span><span class="p">:</span> <span class="n">assetUrl</span><span class="p">,</span>
+                                                                   <span class="nv">clientIdentifier</span><span class="p">:</span> <span class="s">"com.apple.SpokenWord"</span><span class="p">,</span>
+                                                                   <span class="nv">configuration</span><span class="p">:</span> <span class="k">self</span><span class="o">.</span><span class="n">lmConfiguration</span><span class="p">)</span>
+    <span class="p">}</span> <span class="k">catch</span> <span class="p">{</span>
+        <span class="kt">NSLog</span><span class="p">(</span><span class="s">"Failed to prepare custom LM: </span><span class="se">\(</span><span class="n">error</span><span class="o">.</span><span class="n">localizedDescription</span><span class="se">)</span><span class="s">"</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="n">await</span> <span class="kt">MainActor</span><span class="o">.</span><span class="n">run</span> <span class="p">{</span> <span class="k">self</span><span class="o">.</span><span class="n">recordButton</span><span class="o">.</span><span class="n">isEnabled</span> <span class="o">=</span> <span class="kc">true</span> <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="create-the-speech-recognition-request">Create the speech recognition request</h2>
+
+<p>To recognize speech from live audio, SpokenWord creates and configures an <a href="https://developer.apple.com/documentation/speech/sfspeechaudiobufferrecognitionrequest">SFSpeechAudioBufferRecognitionRequest</a> object. When it receives recognition results, the app updates its text view accordingly. The app sets the request object’s <a href="https://developer.apple.com/documentation/speech/sfspeechrecognitionrequest/1649392-shouldreportpartialresults">shouldReportPartialResults</a> property to <code class="language-plaintext highlighter-rouge">true</code>, which causes the speech recognition system to return intermediate results as they are recognized.</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Create and configure the speech recognition request.</span>
+<span class="n">recognitionRequest</span> <span class="o">=</span> <span class="kt">SFSpeechAudioBufferRecognitionRequest</span><span class="p">()</span>
+<span class="k">guard</span> <span class="k">let</span> <span class="nv">recognitionRequest</span> <span class="o">=</span> <span class="n">recognitionRequest</span> <span class="k">else</span> <span class="p">{</span> <span class="nf">fatalError</span><span class="p">(</span><span class="s">"Unable to created a SFSpeechAudioBufferRecognitionRequest object"</span><span class="p">)</span> <span class="p">}</span>
+<span class="n">recognitionRequest</span><span class="o">.</span><span class="n">shouldReportPartialResults</span> <span class="o">=</span> <span class="kc">true</span>
+</code></pre></div></div>
+
+<p>The SpokenWord app then configures the request to use language model customization, using the same configuration object that the system provides earlier to <code class="language-plaintext highlighter-rouge">prepareCustomLanguageModel</code>. The system needs to service customized requests on the device, which it enforces using the <code class="language-plaintext highlighter-rouge">requiresOnDeviceRecognition</code> flag.</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Keep speech recognition data on device</span>
+<span class="k">if</span> <span class="kd">#available(iOS 13, *)</span> <span class="p">{</span>
+    <span class="n">recognitionRequest</span><span class="o">.</span><span class="n">requiresOnDeviceRecognition</span> <span class="o">=</span> <span class="kc">true</span>
+    <span class="k">if</span> <span class="kd">#available(iOS 17, *)</span> <span class="p">{</span>
+        <span class="n">recognitionRequest</span><span class="o">.</span><span class="n">customizedLanguageModel</span> <span class="o">=</span> <span class="k">self</span><span class="o">.</span><span class="n">lmConfiguration</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>To begin the speech recognition process, the app calls <a href="https://developer.apple.com/documentation/speech/sfspeechrecognizer/1649883-recognitiontask">recognitionTask(with:resultHandler:)</a> on its <a href="https://developer.apple.com/documentation/speech/sfspeechrecognizer">SFSpeechRecognizer</a> object. That method uses the information in the provided request object to configure the speech recognition system and to begin processing audio asynchronously. Shortly after calling it, the app begins appending audio samples to the request object. When you tap the Stop Recording button, the app stops adding samples and ends the speech recognition process.</p>
+
+<p>Because the request’s <a href="https://developer.apple.com/documentation/speech/sfspeechrecognitionrequest/1649392-shouldreportpartialresults">shouldReportPartialResults</a> property is <code class="language-plaintext highlighter-rouge">true</code>, the <a href="https://developer.apple.com/documentation/speech/sfspeechrecognizer/1649883-recognitiontask">recognitionTask(with:resultHandler:)</a> method executes its block periodically to deliver partial results. The app uses that block to update its text view with the text in the <a href="https://developer.apple.com/documentation/speech/sfspeechrecognitionresult/1648280-besttranscription">bestTranscription</a> property of the result object. If it receives an error instead of a result, the app stops the recognition process altogether.</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Create a recognition task for the speech recognition session.</span>
+<span class="c1">// Keep a reference to the task so that it can be canceled.</span>
+<span class="n">recognitionTask</span> <span class="o">=</span> <span class="n">speechRecognizer</span><span class="o">.</span><span class="nf">recognitionTask</span><span class="p">(</span><span class="nv">with</span><span class="p">:</span> <span class="n">recognitionRequest</span><span class="p">)</span> <span class="p">{</span> <span class="n">result</span><span class="p">,</span> <span class="n">error</span> <span class="k">in</span>
+    <span class="k">var</span> <span class="nv">isFinal</span> <span class="o">=</span> <span class="kc">false</span>
+    
+    <span class="k">if</span> <span class="k">let</span> <span class="nv">result</span> <span class="o">=</span> <span class="n">result</span> <span class="p">{</span>
+        <span class="c1">// Update the text view with the results.</span>
+        <span class="k">self</span><span class="o">.</span><span class="n">textView</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">bestTranscription</span><span class="o">.</span><span class="n">formattedString</span>
+        <span class="n">isFinal</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">isFinal</span>
+    <span class="p">}</span>
+    
+    <span class="k">if</span> <span class="n">error</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="o">||</span> <span class="n">isFinal</span> <span class="p">{</span>
+        <span class="c1">// Stop recognizing speech if there is a problem.</span>
+        <span class="k">self</span><span class="o">.</span><span class="n">audioEngine</span><span class="o">.</span><span class="nf">stop</span><span class="p">()</span>
+        <span class="n">inputNode</span><span class="o">.</span><span class="nf">removeTap</span><span class="p">(</span><span class="nv">onBus</span><span class="p">:</span> <span class="mi">0</span><span class="p">)</span>
+        
+        <span class="k">self</span><span class="o">.</span><span class="n">recognitionRequest</span> <span class="o">=</span> <span class="kc">nil</span>
+        <span class="k">self</span><span class="o">.</span><span class="n">recognitionTask</span> <span class="o">=</span> <span class="kc">nil</span>
+        
+        <span class="k">self</span><span class="o">.</span><span class="n">recordButton</span><span class="o">.</span><span class="n">isEnabled</span> <span class="o">=</span> <span class="kc">true</span>
+        <span class="k">self</span><span class="o">.</span><span class="n">recordButton</span><span class="o">.</span><span class="nf">setTitle</span><span class="p">(</span><span class="s">"Start Recording"</span><span class="p">,</span> <span class="nv">for</span><span class="p">:</span> <span class="p">[])</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="respond-to-availability-changes-for-speech-recognition">Respond to availability changes for speech recognition</h2>
+
+<p>The availability of speech recognition services can change at any time. For some languages, speech recognition relies on Apple servers, which requires an active Internet connection. If that Internet connection is lost, an app must be ready to handle the disruption of service that can occur.</p>
+
+<p>Whenever the availability of speech recognition services changes, the <a href="https://developer.apple.com/documentation/speech/sfspeechrecognizer">SFSpeechRecognizer</a> object notifies its delegate. SpokenWord provides a delegate object and implements the <a href="https://developer.apple.com/documentation/speech/sfspeechrecognizerdelegate/1649879-speechrecognizer">speechRecognizer(_:availabilityDidChange:)</a> method to respond to availability changes. When services become unavailable, the method disables the Start Recording button and updates its title. When services become available, the method reenables the button and restores its original title.</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">speechRecognizer</span><span class="p">(</span><span class="n">_</span> <span class="nv">speechRecognizer</span><span class="p">:</span> <span class="kt">SFSpeechRecognizer</span><span class="p">,</span> <span class="n">availabilityDidChange</span> <span class="nv">available</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="n">available</span> <span class="p">{</span>
+        <span class="n">recordButton</span><span class="o">.</span><span class="n">isEnabled</span> <span class="o">=</span> <span class="kc">true</span>
+        <span class="n">recordButton</span><span class="o">.</span><span class="nf">setTitle</span><span class="p">(</span><span class="s">"Start Recording"</span><span class="p">,</span> <span class="nv">for</span><span class="p">:</span> <span class="p">[])</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="n">recordButton</span><span class="o">.</span><span class="n">isEnabled</span> <span class="o">=</span> <span class="kc">false</span>
+        <span class="n">recordButton</span><span class="o">.</span><span class="nf">setTitle</span><span class="p">(</span><span class="s">"Recognition Not Available"</span><span class="p">,</span> <span class="nv">for</span><span class="p">:</span> <span class="o">.</span><span class="n">disabled</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+
+      
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js" integrity="sha256-lZaRhKri35AyJSypXXs4o6OPFTbTmUoltBbDCbdzegg=" crossorigin="anonymous"></script>
+    <script>anchors.add();</script>
+  </body>
+</html>
