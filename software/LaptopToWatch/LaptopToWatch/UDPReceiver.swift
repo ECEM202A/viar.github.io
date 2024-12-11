@@ -24,7 +24,7 @@ class UDPReceiver: NSObject, ObservableObject, WCSessionDelegate {
             print("WCSession is not supported on this device.")
         }
 
-        // Timer to process the majority direction every 3 seconds
+        // Timer to process the majority direction every 0.5 seconds
         Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { _ in
             self.processMajorityDirection()
         }

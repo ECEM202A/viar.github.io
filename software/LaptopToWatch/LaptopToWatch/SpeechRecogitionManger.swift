@@ -14,7 +14,7 @@ class SpeechRecognitionManager: NSObject, ObservableObject, SFSpeechRecognizerDe
     
     // UDP connection properties
     private var connection: NWConnection?
-    private let host = "131.179.73.228" // Replace with your laptop's IP
+    private let host = "192.168.1.202" // Replace with your laptop's IP
     private let port: UInt16 = 5005    // Replace with the desired port
     
     override init() {
@@ -142,14 +142,30 @@ class SpeechRecognitionManager: NSObject, ObservableObject, SFSpeechRecognizerDe
     }
     
     private func sendMessage(_ message: String) {
-        guard let messageData = message.data(using: .utf8) else { return }
+        let timestamp = Date().timeIntervalSince1970
+        let messageWithTimestamp = "\(message)|\(timestamp)" // Append the timestamp to the message
+        guard let messageData = messageWithTimestamp.data(using: .utf8) else { return }
+        
         connection?.send(content: messageData, completion: .contentProcessed { error in
             if let error = error {
                 print("Failed to send message: \(error.localizedDescription)")
             } else {
-                print("Message sent: \(message)")
+                print("Message sent: \(messageWithTimestamp)")
             }
         })
+        
+        // Wait for the acknowledgment
+        connection?.receiveMessage { data, _, _, error in
+            if let error = error {
+                print("Error receiving acknowledgment: \(error.localizedDescription)")
+            } else if let data = data, let response = String(data: data, encoding: .utf8) {
+                let currentTime = Date().timeIntervalSince1970
+                if let sentTime = Double(response) {
+                    let latency = (currentTime - sentTime) * 1000 // Convert to milliseconds
+                    print("Round-trip latency: \(latency) ms")
+                }
+            }
+        }
     }
     
     func speechRecognizer(_ speechRecognizer: SFSpeechRecognizer, availabilityDidChange available: Bool) {
