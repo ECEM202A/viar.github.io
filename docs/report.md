@@ -37,7 +37,7 @@ Our approach utilizes a stationary RealSense L515 depth camera combined with hap
 # 2. Related Work
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/93daf982-5c00-4463-8f38-257b3708db80" width="75%" />
+  <img src="https://github.com/user-attachments/assets/93daf982-5c00-4463-8f38-257b3708db80" width="30%" />
 </p>
 
 *Figure 2: An example of the phone app interface designed to integrate with the RealSense system and provide seamless interaction.*
@@ -62,14 +62,10 @@ The core of our system is the integration of the RealSense L515 depth camera, Ap
 
 To assist navigation, the system computes angles and vectors that represent the relative positions of the user’s head, hands, and the target object. Pose detection is achieved using the MediaPipe Pose Landmarker, which identifies key landmarks, including the user’s head and wrist positions. The spatial angle is computed using the following formula:
 
-```html
-<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-
 $$
 \text{Head}_{\text{angle}} = 180 + \arctan\left(\frac{x_{\text{head vector}}}{z_{\text{head vector}}}\right)
 $$
-```
+
 
 This formula determines the precise direction of the user’s head relative to the target object by using the components of the head vector in 3D space. Together, these calculations generate directional commands, such as "move left" or "move forward," which are refined using exponential moving averages to smooth out noisy data, ensuring reliable guidance in real time.
 
@@ -82,7 +78,7 @@ This formula determines the precise direction of the user’s head relative to t
 Haptic feedback delivered through the Apple Watch provides an intuitive method for users to locate objects. The system employs custom-designed haptic waveforms that vary in intensity based on the proximity of the user to the target object. Strong vibrations are triggered when the object is within 0.2 meters, medium vibrations at 1.0 meter, and weak vibrations at 1.5 meters. These patterns allow users to gauge their distance from the object without relying on visual cues. Commands are transmitted to the Apple Watch through an iPhone app using WCSession, which communicates with the laptop server via a UDP protocol.
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/9d4a343c-f6f7-4003-a618-371a2e038229" width="75%" />
+  <img src="https://github.com/user-attachments/assets/9d4a343c-f6f7-4003-a618-371a2e038229" width="30%" />
 </p>
 
 *Figure 5: Haptic feedback patterns displayed on the Apple Watch UI.*
