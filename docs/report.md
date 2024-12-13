@@ -137,3 +137,5 @@ Distance feedback calibration further validated the system's ability to provide 
 
 5. *FusionVision: 3D Object Reconstruction with RGB-D Cameras*
    - URL: https://www.mdpi.com/1424-8220/24/9/2889
+
+6. Live Speech-to-text Apple Framework: https://developer.apple.com/documentation/speech/
