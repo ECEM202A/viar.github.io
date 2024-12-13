@@ -15,5 +15,5 @@ This project aims to develop an accessible room environment for visually impaire
 
 * [Proposal](proposal)
 * [Midterm Checkpoint Presentation Slides](202A_Midterm_Presentation.pdf)
-* [Final Presentation Slides](202A_Final_Presentation)
+* [Final Presentation Slides](202A_Final_Presentation.pdf)
 * [Final Report](report)
