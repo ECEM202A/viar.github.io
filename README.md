@@ -25,7 +25,7 @@ Provides feedback for both navigation and object retrieval.
 
 ### Auditory Spatial Feedback (Airpods/Headphones): 
 Supplements haptic feedback with sound-based navigation cues. 
-Audio cues vary in volume, pitch, or panning (left/right) to indicate direction, distance, and proximity to objects. 
+Audio cues vary(left/right) with haptic feedbackto indicate direction, distance, and proximity to objects. 
 Helps users build spatial awareness through a combination of sound and vibration, enabling finer control for object retrieval. 
 
 ### Speech Recognition (Apple Spokenword App): 
@@ -52,7 +52,6 @@ As the user approaches the object, the system provides precise spatial instructi
 The depth camera ensures that the user is accurately positioned to grasp the object. 
 ### Object Grasping & Feedback: 
 The system, using object positioning data from the depth camera, gives final instructions via both haptic and auditory feedback to assist the user in accurately grasping the object. 
-For instance, a vibration pattern could signal the final position for grasping, while an auditory cue might confirm the object’s proximity. 
  
 
 ## Current Apps on iOS: 
