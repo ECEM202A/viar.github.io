@@ -18,6 +18,3 @@ This project aims to develop an accessible room environment for visually impaire
 * [Final Presentation Slides](https://github.com/ECEM202A/viar.github.io/blob/main/docs/EC%20ENGR%20M202A%20Project%20Final%20Presentation.pdf)
 <<<<<<< HEAD
 * [Final Report](report)
-=======
-* [Final Report](https://github.com/ECEM202A/viar.github.io/blob/main/docs/report.md)
->>>>>>> d0c4e858a0697a3ff08fc1d84fd6540b8a9a4b1e
