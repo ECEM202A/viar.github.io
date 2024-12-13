@@ -29,19 +29,6 @@ Our approach utilizes a stationary RealSense L515 depth camera combined with hap
 ### Potential Impact
 If successful, this system will significantly improve the autonomy of visually impaired individuals by enabling them to navigate indoor spaces and retrieve objects independently. Technologically, it demonstrates an innovative integration of depth sensing with multi-modal feedback in assistive applications.
 
-### Challenges
-Key challenges include ensuring the accuracy and responsiveness of object detection, developing intuitive haptic feedback patterns, and adapting the system for various indoor environments with different lighting and layouts.
-
-### Requirements for Success
-The project requires expertise in computer vision, real-time data processing, haptic feedback design, and software integration. Hardware components include the RealSense L515, Apple Watch, and audio devices like AirPods. 
-
-### Metrics of Success
-- **Accuracy**: Correctly identified and localized objects.
-- **Response Time**: Speed from user request to successful object retrieval.
-- **User Satisfaction**: Feedback from user testing.
-- **Reliability**: System performance in different environments.
-- **Ease of Use**: User adaptability to the system.
-
 ---
 
 # 2. Related Work
@@ -56,18 +43,48 @@ The project requires expertise in computer vision, real-time data processing, ha
 
 # 3. Technical Approach
 
-(Include a brief description of your current setup, with the RealSense L515 camera, Apple Watch haptic feedback, and ongoing development of hand tracking and object detection.)
+### Depth Camera Integration (RealSense L515)
+The stationary RealSense L515 depth camera is the core of our system, enabling real-time 3D mapping of the environment. It captures synchronized RGB and depth data to localize objects in the room. 
+- **Object Detection**: Implemented using YOLOv7 and MobileNetSSD models. Detected 2D object coordinates are deprojected into 3D points using camera intrinsics and depth data.
+- **Pose Detection**: MediaPipe Pose Landmarker identifies user pose landmarks, such as eyes, nose, hands, and wrists, for navigation and retrieval tasks.
+- **Data Processing**: The camera streams data to a laptop server, which processes it for spatial calculations and guidance instructions.
+
+### Spatial Angle and Vector Calculations
+- **Head-Object Angle**: The 3D position of the head (derived from MediaPipe landmarks) is compared with the object’s 3D position. Angles are computed using vector mathematics to determine the user’s relative orientation.
+- **Directional Commands**: By comparing the head-object angle and the forward head angle, the system generates directional instructions such as “left,” “right,” or “forward.” Exponential moving averages smooth noisy data to improve reliability.
+
+### Haptic Feedback via Apple Watch
+- **Implementation**: Custom haptic waveforms are created using the Taptic Engine to deliver feedback based on proximity to the object.
+  - Strong vibration: Within 0.2 meters.
+  - Medium vibration: Within 1.0 meter.
+  - Weak vibration: Within 1.5 meters.
+- **Communication**: Commands are sent to the Apple Watch via WCSession from an iPhone app, which communicates with the laptop server using UDP.
+
+### Auditory Feedback via AirPods
+- **Speech Recognition**: Users issue commands like “find my keys” via speech-to-text. Recognized commands trigger scene analysis by the server.
+- **Directional Audio**: Spatial audio cues guide users to objects. Commands such as “left,” “right,” or “forward” are played dynamically based on real-time positional data.
+- **Integration**: Audio instructions are synchronized with haptic feedback for seamless navigation.
+
+### Object and Hand Tracking
+- **Hand-Object Vector**: Wrist positions are tracked using MediaPipe and deprojected into 3D space. The system computes the Euclidean distance between the hand and the object to guide precise retrieval movements.
+- **Enhancements**: Filtering techniques and majority-voting mechanisms are used to reduce noise and improve accuracy in hand tracking.
+
+### System Integration
+Our system integrates multiple components to provide a cohesive user experience:
+- **Depth Camera and Server**: The RealSense camera sends spatial data to a laptop, which processes object localization, head angles, and directional commands.
+- **Mobile and Wearable Devices**: The iPhone app acts as an intermediary, relaying commands to the Apple Watch for haptic feedback and AirPods for audio guidance.
+- **Modularity**: Each component (camera, server, phone, watch) operates independently but communicates seamlessly for scalability and flexibility.
 
 ---
 
 # 4. Evaluation and Results
+The system demonstrates effective computation of head, object, and hand positioning and orientation, providing accurate directional guidance for users. Angle and vector computations generate reliable directional commands, while audio feedback effectively guides macro movements toward the target object. Haptic feedback is useful for object localization, achieving 70% success in guiding users to locate objects within a 1-meter radius across 20 trials. However, the haptic feedback could be further refined to provide more nuanced guidance for wrist-level micro-movements. Filtering and majority voting systems improve the reliability of directional commands by reducing noise in the real-time feedback control loop.
 
-(Add details on your evaluation metrics and any initial results here.)
+Performance metrics indicate an average UDP round-trip latency of 8.0 milliseconds, with a range of 6.8 to 9.2 milliseconds across 20 trials. Distance feedback calibration was validated, showing appropriate vibration intensity scaling at 0.2m (strong feedback), 1.0m (medium feedback), and 1.5m (weak feedback). The total delay from auditory command to wrist feedback, encompassing multiple devices and computations, was measured at 3.53 seconds. These results highlight the system’s responsiveness and effectiveness at assisting in object retrieval and real-time guidance.
 
 ---
 
 # 5. Discussion and Conclusions
-
 (Summarize findings and potential future directions.)
 
 ---
