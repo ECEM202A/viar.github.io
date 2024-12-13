@@ -16,5 +16,4 @@ This project aims to develop an accessible room environment for visually impaire
 * [Proposal](proposal)
 * [Midterm Checkpoint Presentation Slides](https://github.com/ECEM202A/viar.github.io/blob/main/docs/EC%20ENGR%20M202A%20Project%20Midterm%20Presentation.pdf)
 * [Final Presentation Slides](https://github.com/ECEM202A/viar.github.io/blob/main/docs/EC%20ENGR%20M202A%20Project%20Final%20Presentation.pdf)
-<<<<<<< HEAD
 * [Final Report](report)
