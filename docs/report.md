@@ -45,7 +45,19 @@ If successful, this system will significantly improve the autonomy of visually i
 
 The core of our system is the integration of the RealSense L515 depth camera, Apple Watch for haptic feedback, and auditory cues delivered through AirPods, all working cohesively to assist visually impaired individuals in object retrieval tasks. The RealSense L515 camera operates as a stationary depth-sensing device, providing real-time 3D mapping of the environment. This depth information is synchronized with RGB data to allow accurate object detection and spatial localization. Leveraging advanced computer vision techniques, such as YOLOv7 and MobileNetSSD models, the system identifies objects within the scene and deprojects their 2D positions into a 3D coordinate space using the camera's intrinsic parameters. This transformation is vital for determining the spatial relationships between the user and target objects.
 
-To assist navigation, the system computes angles and vectors that represent the relative positions of the user’s head, hands, and the target object. Pose detection is achieved using the MediaPipe Pose Landmarker, which identifies key landmarks, including the user’s head and wrist positions. The head-object angle is computed by comparing the head’s 3D position with the object’s location, while the system applies vector mathematics to determine the optimal directional commands. These commands, such as “move left” or “move forward,” are generated dynamically and refined using exponential moving averages to smooth out noisy data, ensuring reliable guidance in real time.
+To assist navigation, the system computes angles and vectors that represent the relative positions of the user’s head, hands, and the target object. Pose detection is achieved using the MediaPipe Pose Landmarker, which identifies key landmarks, including the user’s head and wrist positions. The head-object angle is computed using the following formula:
+
+$$
+\theta = \arccos \left( \frac{(x_2 - x_1)(x_3 - x_1) + (y_2 - y_1)(y_3 - y_1) + (z_2 - z_1)(z_3 - z_1)}{\sqrt{(x_2 - x_1)^2 + (y_2 - y_1)^2 + (z_2 - z_1)^2} \cdot \sqrt{(x_3 - x_1)^2 + (y_3 - y_1)^2 + (z_3 - z_1)^2}} \right)
+$$
+
+Here, 
+- \( (x_1, y_1, z_1) \) represents the coordinates of the user’s head,
+- \( (x_2, y_2, z_2) \) represents the coordinates of the user’s current position,
+- \( (x_3, y_3, z_3) \) represents the coordinates of the target object,
+- and \( \theta \) is the computed angle.
+
+The system applies this computation to generate directional commands, such as “move left” or “move forward,” which are refined using exponential moving averages to smooth out noisy data, ensuring reliable guidance in real time.
 
 Haptic feedback delivered through the Apple Watch provides an intuitive method for users to locate objects. The system employs custom-designed haptic waveforms that vary in intensity based on the proximity of the user to the target object. Strong vibrations are triggered when the object is within 0.2 meters, medium vibrations at 1.0 meter, and weak vibrations at 1.5 meters. These patterns allow users to gauge their distance from the object without relying on visual cues. Commands are transmitted to the Apple Watch through an iPhone app using WCSession, which communicates with the laptop server via a UDP protocol. This seamless integration ensures low-latency feedback essential for real-time navigation.
 
