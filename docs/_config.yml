@@ -1,4 +1,7 @@
 theme: jekyll-theme-modernist
+# Easy to integrate supported themes: 
+# https://pages.github.com/themes/
+
 show_downloads: true
 
 plugins:
