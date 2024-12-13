@@ -43,13 +43,17 @@ Metrics for success include:
 
 ### Key Tasks
 1. Set up depth camera and Apple Watch integration.
-2. Develop object detection and tracking algorithms.
+2. Develop object/orientation detection and tracking algorithms.
 3. Implement haptic and auditory feedback systems.
 4. Conduct user testing and iterate on feedback.
 
 ### Team Task Partitioning
-- **Jason Wu**: Depth camera setup and path planning.
-- **Team Members**: Object detection, haptic feedback programming, and user testing.
+- **Arshia Dabiran**: Depth Camera Setup/Laptop-iOS interface
+- **Alex Haafemeister**: Object/Orientation detection and tracking algorithms.
+- **Dhruv Sirohi**: Speech recognition system,keyword detection, integration with the navigation pipeline
+- **Yiteng Jiang**: Developed the watch and phone apps, integrating UDP communication and audio/haptic feedback for navigation.
+
+
 
 ## 9. Related Work
 
