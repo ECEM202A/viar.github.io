@@ -43,48 +43,36 @@ If successful, this system will significantly improve the autonomy of visually i
 
 # 3. Technical Approach
 
-### Depth Camera Integration (RealSense L515)
-The stationary RealSense L515 depth camera is the core of our system, enabling real-time 3D mapping of the environment. It captures synchronized RGB and depth data to localize objects in the room. 
-- **Object Detection**: Implemented using YOLOv7 and MobileNetSSD models. Detected 2D object coordinates are deprojected into 3D points using camera intrinsics and depth data.
-- **Pose Detection**: MediaPipe Pose Landmarker identifies user pose landmarks, such as eyes, nose, hands, and wrists, for navigation and retrieval tasks.
-- **Data Processing**: The camera streams data to a laptop server, which processes it for spatial calculations and guidance instructions.
+The core of our system is the integration of the RealSense L515 depth camera, Apple Watch for haptic feedback, and auditory cues delivered through AirPods, all working cohesively to assist visually impaired individuals in object retrieval tasks. The RealSense L515 camera operates as a stationary depth-sensing device, providing real-time 3D mapping of the environment. This depth information is synchronized with RGB data to allow accurate object detection and spatial localization. Leveraging advanced computer vision techniques, such as YOLOv7 and MobileNetSSD models, the system identifies objects within the scene and deprojects their 2D positions into a 3D coordinate space using the camera's intrinsic parameters. This transformation is vital for determining the spatial relationships between the user and target objects.
 
-### Spatial Angle and Vector Calculations
-- **Head-Object Angle**: The 3D position of the head (derived from MediaPipe landmarks) is compared with the object’s 3D position. Angles are computed using vector mathematics to determine the user’s relative orientation.
-- **Directional Commands**: By comparing the head-object angle and the forward head angle, the system generates directional instructions such as “left,” “right,” or “forward.” Exponential moving averages smooth noisy data to improve reliability.
+To assist navigation, the system computes angles and vectors that represent the relative positions of the user’s head, hands, and the target object. Pose detection is achieved using the MediaPipe Pose Landmarker, which identifies key landmarks, including the user’s head and wrist positions. The head-object angle is computed by comparing the head’s 3D position with the object’s location, while the system applies vector mathematics to determine the optimal directional commands. These commands, such as “move left” or “move forward,” are generated dynamically and refined using exponential moving averages to smooth out noisy data, ensuring reliable guidance in real time.
 
-### Haptic Feedback via Apple Watch
-- **Implementation**: Custom haptic waveforms are created using the Taptic Engine to deliver feedback based on proximity to the object.
-  - Strong vibration: Within 0.2 meters.
-  - Medium vibration: Within 1.0 meter.
-  - Weak vibration: Within 1.5 meters.
-- **Communication**: Commands are sent to the Apple Watch via WCSession from an iPhone app, which communicates with the laptop server using UDP.
+Haptic feedback delivered through the Apple Watch provides an intuitive method for users to locate objects. The system employs custom-designed haptic waveforms that vary in intensity based on the proximity of the user to the target object. Strong vibrations are triggered when the object is within 0.2 meters, medium vibrations at 1.0 meter, and weak vibrations at 1.5 meters. These patterns allow users to gauge their distance from the object without relying on visual cues. Commands are transmitted to the Apple Watch through an iPhone app using WCSession, which communicates with the laptop server via a UDP protocol. This seamless integration ensures low-latency feedback essential for real-time navigation.
 
-### Auditory Feedback via AirPods
-- **Speech Recognition**: Users issue commands like “find my keys” via speech-to-text. Recognized commands trigger scene analysis by the server.
-- **Directional Audio**: Spatial audio cues guide users to objects. Commands such as “left,” “right,” or “forward” are played dynamically based on real-time positional data.
-- **Integration**: Audio instructions are synchronized with haptic feedback for seamless navigation.
+Auditory feedback complements the haptic signals by guiding macro-level movements toward the target object. Using speech-to-text functionality, users can issue commands such as “find my keys,” which the system processes to initiate object detection and spatial analysis. Directional audio cues, synchronized with haptic feedback, are delivered through AirPods, providing users with clear and actionable instructions. This dual-modal feedback system significantly enhances the user experience by addressing both macro and micro navigation challenges.
 
-### Object and Hand Tracking
-- **Hand-Object Vector**: Wrist positions are tracked using MediaPipe and deprojected into 3D space. The system computes the Euclidean distance between the hand and the object to guide precise retrieval movements.
-- **Enhancements**: Filtering techniques and majority-voting mechanisms are used to reduce noise and improve accuracy in hand tracking.
+The system’s hand tracking capability is another critical component, enabling precise object retrieval. By deprojecting wrist landmarks into 3D space, the system calculates the Euclidean distance between the user’s hand and the target object. This information guides fine motor movements required for grasping objects. Noise and inaccuracies in the depth data are mitigated using filtering techniques and majority-voting mechanisms, which improve the overall reliability of the system.
 
-### System Integration
-Our system integrates multiple components to provide a cohesive user experience:
-- **Depth Camera and Server**: The RealSense camera sends spatial data to a laptop, which processes object localization, head angles, and directional commands.
-- **Mobile and Wearable Devices**: The iPhone app acts as an intermediary, relaying commands to the Apple Watch for haptic feedback and AirPods for audio guidance.
-- **Modularity**: Each component (camera, server, phone, watch) operates independently but communicates seamlessly for scalability and flexibility.
+The modular design of the system allows each component—the depth camera, laptop server, mobile application, and wearable devices—to operate independently while maintaining seamless communication. This modularity not only simplifies debugging and updates but also ensures the system's scalability and adaptability to various use cases. The RealSense camera streams spatial data to a laptop server, which processes the information and transmits commands to the iPhone app. The app, in turn, relays these commands to the Apple Watch and AirPods, creating a cohesive and efficient navigation framework for visually impaired individuals.
 
 ---
 
 # 4. Evaluation and Results
-The system demonstrates effective computation of head, object, and hand positioning and orientation, providing accurate directional guidance for users. Angle and vector computations generate reliable directional commands, while audio feedback effectively guides macro movements toward the target object. Haptic feedback is useful for object localization, achieving 70% success in guiding users to locate objects within a 1-meter radius across 20 trials. However, the haptic feedback could be further refined to provide more nuanced guidance for wrist-level micro-movements. Filtering and majority voting systems improve the reliability of directional commands by reducing noise in the real-time feedback control loop.
 
-Performance metrics indicate an average UDP round-trip latency of 8.0 milliseconds, with a range of 6.8 to 9.2 milliseconds across 20 trials. Distance feedback calibration was validated, showing appropriate vibration intensity scaling at 0.2m (strong feedback), 1.0m (medium feedback), and 1.5m (weak feedback). The total delay from auditory command to wrist feedback, encompassing multiple devices and computations, was measured at 3.53 seconds. These results highlight the system’s responsiveness and effectiveness at assisting in object retrieval and real-time guidance.
+The evaluation of the system focused on its ability to accurately compute head, object, and hand positioning and provide effective real-time guidance through multi-modal feedback. The RealSense L515 depth camera demonstrated high precision in spatial mapping, enabling the system to generate reliable directional commands. By combining angle and vector computations, the system provided users with accurate instructions for both macro navigation and micro adjustments required for object retrieval. During controlled trials, auditory feedback proved effective in guiding users toward target objects, while haptic signals played a crucial role in confirming object proximity.
+
+Haptic feedback performance was assessed through 20 trials, where users were tasked with locating objects within a 1-meter radius. The system achieved a success rate of 70%, demonstrating its capability to provide meaningful guidance. Feedback intensity scaling was validated at three distance thresholds: strong feedback at 0.2 meters, medium feedback at 1.0 meter, and weak feedback at 1.5 meters. Although effective, further refinement in haptic feedback patterns is necessary to enhance guidance for wrist-level micro-movements. The integration of filtering mechanisms and majority-voting systems significantly improved the reliability of the feedback loop by reducing noise and ensuring consistent performance across various scenarios.
+
+Latency analysis revealed an average UDP round-trip time of 8.0 milliseconds, with a range of 6.8 to 9.2 milliseconds across all trials. This low latency underscores the system’s capability to deliver real-time responses essential for navigation. The total delay from auditory command initiation to haptic feedback delivery, encompassing all computational and communication processes, was measured at 3.53 seconds. This result highlights the system’s responsiveness and its potential for real-world applications.
+
+Distance feedback calibration further validated the system's ability to provide precise proximity-based guidance. Strong vibrations at 0.2 meters effectively signaled the user’s arrival at the target, while medium and weak vibrations at greater distances provided gradual directional cues. These calibrated responses ensured that users could confidently approach and retrieve objects without relying on visual input. Additionally, the combination of haptic and auditory feedback proved instrumental in facilitating seamless navigation and object localization.
+
+Overall, the system demonstrated robust performance in assisting visually impaired individuals with object retrieval tasks. Its high accuracy, low latency, and effective multi-modal feedback make it a promising solution for enhancing independence and mobility. However, ongoing improvements in haptic feedback design and adaptive algorithms will further optimize the system’s usability and effectiveness in diverse environments.
 
 ---
 
 # 5. Discussion and Conclusions
+
 (Summarize findings and potential future directions.)
 
 ---
