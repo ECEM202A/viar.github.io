@@ -100,8 +100,4 @@ Provides wearable vision assistance through object detection and feedback, thoug
 A system that uses a depth camera to provide real-time, 3D navigation assistance. 
 The Apple Watch delivers haptic cues, guiding users through spaces to locate and grasp objects with accuracy. 
 Speech recognition allows hands-free control, and the system provides both directional navigation and fine-tuned object retrieval guidance. 
-
-# Team Notes:
-10/16 Notes 
-Jason Vu –RealSense PHD guy 
  
