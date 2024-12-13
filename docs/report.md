@@ -63,11 +63,9 @@ The core of our system is the integration of the RealSense L515 depth camera, Ap
 To assist navigation, the system computes angles and vectors that represent the relative positions of the user’s head, hands, and the target object. Pose detection is achieved using the MediaPipe Pose Landmarker, which identifies key landmarks, including the user’s head and wrist positions. The spatial angle is computed using the following formula:
 
 $$
-\text{Head}_{\text{angle}} = 180 + \arctan\left(\frac{x_{\text{head vector}}}{z_{\text{head vector}}}\right)
-$$
-$$
 \theta = \arccos \left( \frac{(x_2 - x_1)(x_3 - x_1) + (y_2 - y_1)(y_3 - y_1) + (z_2 - z_1)(z_3 - z_1)}{\sqrt{(x_2 - x_1)^2 + (y_2 - y_1)^2 + (z_2 - z_1)^2} \cdot \sqrt{(x_3 - x_1)^2 + (y_3 - y_1)^2 + (z_3 - z_1)^2}} \right)
 $$
+
 
 
 This formula determines the precise direction of the user’s head relative to the target object by using the components of the head vector in 3D space. Together, these calculations generate directional commands, such as "move left" or "move forward," which are refined using exponential moving averages to smooth out noisy data, ensuring reliable guidance in real time.
