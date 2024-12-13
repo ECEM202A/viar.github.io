@@ -92,16 +92,15 @@ Metrics for success include:
    [Link](https://developer.apple.com/tutorials/app-dev-training/transcribing-speech-to-text)
 
 ## 10. References
-1. X. Hu, A. Song, and Z. Wei, "Using Depth Cameras for Object Detection and Navigation Assistance for the Visually Impaired" IEEE Xplore. Available: https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=9795125.
+1. Depth Cameras in Assistive Tech: Paper: "Using Depth Cameras for Object Detection and Navigation Assistance for the Visually Impaired" Discusses how depth cameras can map environments and aid in object detection and navigation.
 
-2. G. Wilson and S. Brewster, "Haptic Feedback for Object Localization and Grasping in Assistive Technologies," Proceedings of the ACM Symposium on Spatial User Interaction, 2016. Available: https://dl.acm.org/doi/abs/10.1145/2982142.2982160.
+2. Haptic Feedback in Object Retrieval: Paper: "Haptic Feedback for Object Localization and Grasping in Assistive Technologies" Explores how haptic feedback can be used to guide users towards precise movements for object retrieval.
 
-3. L. Maddalena and A. Petrosino, "Moving Object Detection in RGBD Data," Journal of Imaging, vol. 4, no. 5, p. 71, 2018. Available: https://www.mdpi.com/2313-433X/4/5/71.
+3. Speech Recognition in Assistive Devices: Paper: "Speech Recognition Systems in Assistive Technologies: Navigating and Retrieving Objects" Reviews the use of voice-controlled systems for visually impaired navigation and object interaction. https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=9795125 https://dl.acm.org/doi/abs/10.1145/2982142.2982160
 
-4. D. Lin, S. Fidler, and R. Urtasun, "Holistic Scene Understanding for 3D Object Detection with RGBD Cameras," in Proceedings of the IEEE International Conference on Computer Vision (ICCV), 2013. Available: https://openaccess.thecvf.com/content_iccv_2013/papers/Lin_Holistic_Scene_Understanding_2013_ICCV_paper.pdf.
+4. Moving Object Detection: www.mdpi.com/2313-433X/4/5/71: Paper: Moving Object Detection in RGBD Data Summary: Surveys background subtraction techniques for detecting moving objects using RGB-D cameras, highlighting the role of depth data in improving object detection accuracy.
 
-5. S. Ghazouali, Y. Mhirit, and A. Oukhrid, "FusionVision: 3D Object Reconstruction with RGB-D Cameras," Sensors, vol. 24, no. 9, p. 2889, 2023. Available: https://www.mdpi.com/1424-8220/24/9/2889.
+5. Room Scanning: openaccess.thecvf.com/content_iccv_2013/papers/Lin_Holistic_Scene_Understanding_2013_ICCV_paper.pdf : Paper: Holistic Scene Understanding for 3D Object Detection with RGBD Cameras Summary: Presents methods for integrating RGB and depth data to improve object detection and spatial reasoning in indoor environments.
 
-S. Yamashita, H. Suzuki, and A. Kuwahara, "Intel RealSense SLAM Library," JSTAGE Journal of Sensor Applications, vol. 23, no. 4, pp. 201–210, 2021. Available: https://www.jstage.jst.go.jp/article/jsp/23/4/23_201/_pdf/-char/en.
-
+6. Object Detection: www.mdpi.com/1424-8220/24/9/2889: Paper: FusionVision: 3D Object Reconstruction with RGB-D Cameras Summary: Describes FusionVision, which combines RGB-D object detection and segmentation for precise 3D localization of objects.
 
