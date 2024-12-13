@@ -66,6 +66,7 @@ $$
 \theta_{\text{head}} = 180 + \arctan\left(\frac{x_{\text{head}}}{z_{\text{head}}}\right)
 $$
 
+
 This formula determines the precise direction of the user’s head relative to the target object by using the components of the head vector in 3D space. Together, these calculations generate directional commands, such as "move left" or "move forward," which are refined using exponential moving averages to smooth out noisy data, ensuring reliable guidance in real time.
 
 <p align="center">
