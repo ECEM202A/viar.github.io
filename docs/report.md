@@ -65,6 +65,9 @@ To assist navigation, the system computes angles and vectors that represent the 
 $$
 \text{Head}_{\text{angle}} = 180 + \arctan\left(\frac{x_{\text{head vector}}}{z_{\text{head vector}}}\right)
 $$
+$$
+\theta = \arccos \left( \frac{(x_2 - x_1)(x_3 - x_1) + (y_2 - y_1)(y_3 - y_1) + (z_2 - z_1)(z_3 - z_1)}{\sqrt{(x_2 - x_1)^2 + (y_2 - y_1)^2 + (z_2 - z_1)^2} \cdot \sqrt{(x_3 - x_1)^2 + (y_3 - y_1)^2 + (z_3 - z_1)^2}} \right)
+$$
 
 
 This formula determines the precise direction of the user’s head relative to the target object by using the components of the head vector in 3D space. Together, these calculations generate directional commands, such as "move left" or "move forward," which are refined using exponential moving averages to smooth out noisy data, ensuring reliable guidance in real time.
@@ -90,10 +93,10 @@ Haptic feedback delivered through the Apple Watch provides an intuitive method f
 The evaluation of the system focused on its ability to accurately compute head, object, and hand positioning and provide effective real-time guidance through multi-modal feedback. The RealSense L515 depth camera demonstrated high precision in spatial mapping, enabling the system to generate reliable directional commands. By combining angle and vector computations, the system provided users with accurate instructions for both macro navigation and micro adjustments required for object retrieval. During controlled trials, auditory feedback proved effective in guiding users toward target objects, while haptic signals played a crucial role in confirming object proximity.
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/f4f0fde8-e58a-4d36-b286-88b3eac58faa" width="75%" />
+  <img src="https://github.com/user-attachments/assets/3e378c8b-9cf6-49ae-a838-5819878b20b6" width="75%" />
 </p>
 
-*Figure 6: Depth distancing test showing the system's ability to calculate object distances with high precision.*
+*Figure 6: Head Angle computation test showing the system's ability to calculate object distances with high precision.*
 
 The results demonstrated that the integration of filtering mechanisms significantly improved the reliability of the feedback loop by reducing noise and ensuring consistent performance across various scenarios. Additionally, the low latency of 8 milliseconds for UDP round-trip responses underscores the system’s potential for real-time applications. User feedback highlighted the accuracy of auditory cues for macro navigation and the effectiveness of haptic feedback in indicating proximity to target objects.
 
