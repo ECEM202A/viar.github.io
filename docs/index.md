@@ -7,7 +7,7 @@ This project aims to develop an accessible room environment for visually impaire
 ## Team
 
 * Alex Hafemeister
-* Arshia Dariban
+* Arshia Dabiran
 * Dhruv Sirohi
 * Ethan Jiang
 
