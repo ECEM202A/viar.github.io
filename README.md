@@ -12,28 +12,31 @@ This project aims to provide visually impaired individuals with spatial awarenes
  
 
 ## Key Components: 
-Depth Camera (RealSense L515): 
+### Depth Camera (RealSense L515): 
 Provides a 3D map of the environment. 
 Tracks the user's position and objects in the room. 
 Identifies and localizes objects (e.g., phone, keys, wallet) with depth information, helping the system provide spatial guidance. 
-https://www.jstage.jst.go.jp/article/jsp/23/4/23_201/_pdf/-char/en (Intel RealSense pathplanning) 
-https://github.com/pancx/pathplanning + Intel® RealSense™ SLAM Library 
-Apple Watch (Haptic Feedback): 
+
+
+### Apple Watch (Haptic Feedback): 
 Delivers directional and spatial cues to guide the user towards the object. 
 Different haptic patterns indicate directions (forward, left, right) or fine-tune movements for grasping objects. 
-Provides feedback for both navigation and object retrieval. 
-Auditory Spatial Feedback (Airpods/Headphones): 
+Provides feedback for both navigation and object retrieval.
+
+### Auditory Spatial Feedback (Airpods/Headphones): 
 Supplements haptic feedback with sound-based navigation cues. 
 Audio cues vary in volume, pitch, or panning (left/right) to indicate direction, distance, and proximity to objects. 
 Helps users build spatial awareness through a combination of sound and vibration, enabling finer control for object retrieval. 
-Speech Recognition (Whisper OpenAI): 
+
+### Speech Recognition (Apple Spokenword App): 
 Apple Speech to text: (https://developer.apple.com/tutorials/app-dev-training/transcribing-speech-to-text ) 
 User issues voice commands like "Find my phone" or "Where is the table?" 
 Speech recognition converts the command into actionable navigation instructions, processed by the depth camera and navigation system. 
-Command Interpretation (Grok LLM): 
+
+### Keyword  Command Interpretation: 
 Processes user commands for complex tasks such as searching for specific objects or providing step-by-step navigation instructions. 
 Offers context-aware feedback to guide users through detailed retrieval tasks. 
-TCP communication between iOS app and Laptop  
+UDP communication between iOS app and Laptop  
 
 ## How It Works: 
 ### Room Scanning & Object Detection:  
