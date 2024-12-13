@@ -6,7 +6,7 @@ url: https://yourusername.github.io # Replace with your GitHub Pages URL
 baseurl: "" # Keep it blank unless the site is in a subdirectory
 
 # Theme settings
-theme: minimal # Replace with your chosen GitHub Pages theme
+theme: jekyll-theme-minimal # Replace with your chosen GitHub Pages theme
 
 # Plugins (optional)
 plugins:
