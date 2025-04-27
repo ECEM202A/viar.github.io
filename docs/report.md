@@ -1,5 +1,5 @@
 # Table of Contents
-* Abstract
+* [Abstract]
 * [Introduction](#1-introduction)
 * [Related Work](#2-related-work)
 * [Technical Approach](#3-technical-approach)
@@ -65,7 +65,6 @@ To assist navigation, the system computes angles and vectors that represent the 
 $$
 \theta_{\text{head}} = 180 + \arctan\left(\frac{x_{\text{head}}}{z_{\text{head}}}\right)
 $$
-
 
 This formula determines the precise direction of the user’s head relative to the target object by using the components of the head vector in 3D space. Together, these calculations generate directional commands, such as "move left" or "move forward," which are refined using exponential moving averages to smooth out noisy data, ensuring reliable guidance in real time.
 
