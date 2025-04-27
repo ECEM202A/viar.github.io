@@ -100,7 +100,7 @@ Metrics for success include:
 
 4. Moving Object Detection: www.mdpi.com/2313-433X/4/5/71: Paper: Moving Object Detection in RGBD Data Summary: Surveys background subtraction techniques for detecting moving objects using RGB-D cameras, highlighting the role of depth data in improving object detection accuracy.
 
-5. Room Scanning: openaccess.thecvf.com/content_iccv_2013/papers/Lin_Holistic_Scene_Understanding_2013_ICCV_paper.pdf : Paper: Holistic Scene Understanding for 3D Object Detection with RGBD Cameras Summary: Presents methods for integrating RGB and depth data to improve object detection and spatial reasoning in indoor environments.
+5. Room Scanning Paper: Holistic Scene Understanding for 3D Object Detection with RGBD Cameras Summary: Presents methods for integrating RGB and depth data to improve object detection and spatial reasoning in indoor environments.
 
 6. Object Detection: www.mdpi.com/1424-8220/24/9/2889: Paper: FusionVision: 3D Object Reconstruction with RGB-D Cameras Summary: Describes FusionVision, which combines RGB-D object detection and segmentation for precise 3D localization of objects.
 
